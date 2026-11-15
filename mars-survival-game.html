@@ -1,0 +1,2525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090d12">
+<title>Red Path — Jezero Field Study</title>
+<style>
+:root{color-scheme:dark;--bg:#090d12;--panel:#10171e;--line:#34404a;--text:#e9e7df;--muted:#9ba6ad;--dim:#70808a;--amber:#e3a873;--green:#a4c9a5;--blue:#a8c8d9;font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--text)}
+button{font:inherit;color:inherit}
+button:focus-visible{outline:2px solid #d6bd91;outline-offset:3px}
+.screen{position:fixed;inset:0}
+.screen[hidden]{display:none!important}
+#title-screen{display:grid;place-items:center;overflow:hidden;background:linear-gradient(90deg,#090d12d9 0%,#090d1277 52%,#090d1240 100%),url("./mars_initial.jpg") center/cover no-repeat}
+#title-screen:before{position:absolute;inset:0;content:"";pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 30%,#090d1244 100%)}
+.title-screen-content{position:relative;width:min(900px,100%);padding:clamp(32px,8vw,100px)}
+.title-eyebrow{color:#d8b891;font:10px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.24em}
+.title-wordmark{margin:18px 0 10px;color:#eee8db;font-size:clamp(58px,13vw,132px);font-weight:450;line-height:.9;letter-spacing:.08em;text-shadow:0 3px 24px #000b}
+.title-subtitle{margin:21px 0 0;color:#b9c0bd;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em}
+.title-screen .start-button{margin-top:42px}
+#welcome{display:block;overflow:auto;background:linear-gradient(90deg,#090d12ed 0%,#101417d9 48%,#10141778 100%),url("./mars_initial.jpg") center/cover no-repeat}
+.briefing-content{display:flex;min-height:100%;width:min(920px,100%);margin:0 auto;padding:clamp(24px,5vh,58px) clamp(22px,6vw,76px);flex-direction:column;justify-content:center}
+.briefing-heading{margin:12px 0 10px;font-size:clamp(30px,5vw,54px);font-weight:450;line-height:1.04;letter-spacing:-.04em}
+.briefing-lead{max-width:760px;margin:0;color:#c1c5c2;font-size:15px;line-height:1.65}
+.briefing-section-title{margin:28px 0 12px;color:#d8c6a9;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.17em}
+.briefing-list{display:grid;gap:9px;margin:0;padding-left:19px;color:#d6dbd6;font-size:12px;line-height:1.5}
+.briefing-list>li::marker{color:#d4a674}
+.sample-list{display:grid;gap:4px;margin:6px 0 0;padding-left:20px;color:#adb8b5;font-size:11px}
+.sample-list li::marker{color:#94b3aa}
+.briefing-guidance{max-width:800px;margin:22px 0 0;color:#b9c3be;font-size:12px;line-height:1.65}
+.briefing-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:18px;padding-top:16px;border-top:1px solid #c1c8c333}
+.mission-ready{margin:0;color:#e3c59f;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em}
+.briefing-footer .start-button{flex:0 0 auto;margin:0}
+.welcome-content{width:min(980px,100%);padding:clamp(28px,7vw,88px)}
+.agency{display:flex;align-items:center;gap:12px;color:#c5c6bf;font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase}
+.agency-mark{display:grid;width:38px;height:38px;place-items:center;border:1px solid #79818a;border-radius:50%;font:600 10px ui-monospace,monospace;letter-spacing:0}
+.agency small{display:block;color:#9da7aa;font-size:9px;letter-spacing:.13em}
+.welcome-copy{max-width:730px;margin-top:clamp(72px,15vh,150px)}
+.kicker{color:#d8b891;font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase}
+h1{max-width:760px;margin:17px 0 15px;font-size:clamp(42px,8vw,82px);font-weight:450;line-height:.98;letter-spacing:-.055em}
+.welcome-copy>p:not(.kicker){max-width:560px;color:#c1c5c2;font-size:15px;line-height:1.75}
+.start-button{display:inline-flex;align-items:center;gap:16px;margin-top:22px;padding:14px 19px;border:1px solid #c0b49c;border-radius:3px;background:#d5c8ae;color:#141719;font-size:12px;font-weight:700;letter-spacing:.12em;cursor:pointer;transition:background .16s,transform .16s}
+.start-button:hover{transform:translateY(-2px);background:#eee3cd}
+.start-button span{font-size:18px}
+.welcome-meta{display:flex;flex-wrap:wrap;gap:20px;margin-top:52px;color:#a6afb1;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em}
+.welcome-meta span:before{content:"";display:inline-block;width:5px;height:5px;margin:0 8px 1px 0;border-radius:50%;background:#c59f75}
+.source-note{margin-top:14px!important;color:#9aa3a3!important;font-size:10px!important}
+#simulator{display:block;overflow:hidden;background:#b88a70}
+#scene{position:absolute;inset:0;background:#b88a70}
+#scene canvas{display:block;width:100%;height:100%}
+#simulator[data-view="map"] #scene{display:none}
+#storm-haze{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 54% 46%,#d8b18fe8 0%,#c99a72f0 54%,#b9845feF 100%),linear-gradient(180deg,#d3b18deF 0%,#c99a73f2 52%,#b47f5ef5 100%);transition:opacity .12s linear}
+#storm-haze:before,#storm-haze:after{position:absolute;inset:-12%;content:"";pointer-events:none}
+#storm-haze:before{background:radial-gradient(ellipse at 22% 55%,#e4c69cbd 0%,transparent 48%),radial-gradient(ellipse at 76% 34%,#9f704ec7 0%,transparent 51%),radial-gradient(ellipse at 53% 78%,#e0bd93b8 0%,transparent 46%);filter:blur(18px);opacity:.82;animation:storm-dust-drift 3.2s ease-in-out infinite alternate}
+#storm-haze:after{background:linear-gradient(108deg,transparent 6%,#e0bd94b5 23%,#986745c9 42%,#e2c29ad1 61%,#ac7958be 76%,transparent 94%);background-size:180% 100%;opacity:.78;animation:storm-dust-sweep 2.3s linear infinite alternate}
+@keyframes storm-dust-drift{from{transform:translate3d(-4%,1%,0) scale(1.02)}to{transform:translate3d(4%,-1%,0) scale(1.08)}}
+@keyframes storm-dust-sweep{from{background-position:0 50%;transform:translateX(-3%)}to{background-position:100% 50%;transform:translateX(3%)}}
+#simulator[data-view="map"] #storm-haze{display:none}
+#map2d{position:absolute;inset:0;display:none;overflow:hidden;background:#171410}
+#simulator[data-view="map"] #map2d{display:block}
+#simulator[data-view="map"] .hud-visor{display:none}
+#simulator[data-view="map"] .display-switcher{display:none}
+#map2d img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;filter:brightness(.67) saturate(.72)}
+#map2d img,#map-overlay{transform:translate(-2.6vw,-26.2vh) scale(3.5);transform-origin:52.6% 76.2%}
+#map-overlay .map-border,#map-overlay .map-grid,#map-overlay .map-label{display:none}
+#map2d::after{position:absolute;inset:0;content:"";pointer-events:none;background:linear-gradient(180deg,#090d1266,transparent 26%,#090d1214 70%,#090d1277)}
+#map-overlay{position:absolute;inset:0;z-index:1;width:100%;height:100%}
+.map-grid{fill:none;stroke:#e3e3d3;stroke-opacity:.18;stroke-width:1;stroke-dasharray:6 7}
+.map-border{fill:none;stroke:#e7dfc8;stroke-opacity:.5;stroke-width:1.5}
+.map-player{r:1.6;fill:#39c9ff;stroke:#eaffff;stroke-width:2.5;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 8px #dceaff)}
+.map-route-halo,.map-route{fill:none;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.map-route-halo{stroke:#07131dcc;stroke-width:5;vector-effect:non-scaling-stroke}
+.map-route{stroke:#39c9ff;stroke-width:2.4;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 7px #159ce9)}
+.map-route-node{r:1.5;stroke:#111820;stroke-width:2;vector-effect:non-scaling-stroke}
+.map-route-destination{fill:#39eda2}
+.map-route-start{fill:#f04443;stroke:#fff4ed;stroke-width:2}
+.map-route-label{fill:#f4f0e5;font:2px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;paint-order:stroke;stroke:#091018dd;stroke-width:.7px;stroke-linejoin:round}
+.map-event-pin{pointer-events:none}
+.map-event-pin text{fill:#fff;font:2.6px ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:#071018;stroke-width:.8px;stroke-linejoin:round;pointer-events:none}
+.map-event-pin circle{stroke:#081019;stroke-width:.7;vector-effect:non-scaling-stroke}
+.map-event-pin[data-type="sample"] circle{fill:#47c58f}
+.map-event-pin[data-type="sand"] circle,.map-event-pin[data-type="storm"] circle{fill:#f06455}
+.map-event-pin[data-type="temperature"] circle{fill:#f0c84b}
+.map-event-pin[data-type="compaction"] circle{fill:#70a7df}
+.map-event-pin[data-type="mola"] circle{fill:#51d7ed}
+.map-event-pin[data-completed="true"] circle{fill:#9ac8a5}
+.map-event-pin[data-active="true"] circle{stroke:#fff;stroke-width:1.5;filter:drop-shadow(0 0 2px #f06455)}
+.route-event-key{position:absolute;z-index:2;max-width:min(400px,calc(100vw - 28px));padding:8px 10px;border:1px solid #bac9c255;background:#0a1018df;color:#dce7df;font:8px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.03em;pointer-events:none}
+.map-event-key{top:82px;left:clamp(14px,3vw,34px)}
+.route-mini-key{margin-top:5px;color:#aabbb5;font:6px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em}
+.map-label{fill:#f4f0e5;font:12px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1px;paint-order:stroke;stroke:#091018bb;stroke-width:4px;stroke-linejoin:round}
+.map-instruction{position:absolute;z-index:2;right:clamp(14px,3vw,34px);bottom:90px;padding:9px 12px;border:1px solid #bac9c255;background:#0a1018c9;color:#eee9dc;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em}
+.map-instruction[hidden]{display:none}
+#simulator[data-view="first-person"] .map-instruction{display:none}
+#simulator[data-display="reality"] .telemetry-item{display:none}
+#simulator.mission-complete>:not(#scene):not(#mission-complete):not(#mission-credits){display:none!important}
+#mission-complete{position:absolute;inset:0;z-index:12;display:grid;place-items:center;padding:24px;text-align:center;pointer-events:none}
+#mission-complete[hidden]{display:none}
+#mission-complete-content{max-width:760px;opacity:0;animation:mission-copy-in .8s ease .2s forwards}
+#mission-complete-kicker{margin:0 0 15px;color:#d9c6a9;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em}
+#mission-complete h1{max-width:none;margin:0;color:#fff0cd;font-size:clamp(30px,7vw,96px);font-weight:800;line-height:1.04;letter-spacing:.04em;text-shadow:0 0 14px #f0c77c,0 0 38px #d37a40aa,0 4px 24px #000}
+#mission-complete p:last-child{margin:14px 0 0;color:#d8ded8;font:12px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em}
+#simulator.mission-complete:after{position:absolute;z-index:20;inset:0;background:#000;content:"";opacity:0;pointer-events:none;animation:mission-fade-black 2.4s ease-in 3.8s forwards}
+#mission-credits{position:absolute;inset:0;z-index:21;display:grid;place-items:center;padding:24px;background:#000;text-align:center;opacity:0;animation:mission-credits-in .8s ease forwards}
+#mission-credits[hidden]{display:none}
+#mission-credits-content{display:grid;justify-items:center;gap:24px;max-width:820px}
+#mission-credits-copy{margin:0;color:#e9e7df;font:clamp(12px,1.5vw,16px)/1.8 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em}
+#mission-return-button{padding:13px 18px;border:1px solid #d6bd91;background:#d5c8ae;color:#141719;font-size:11px;font-weight:700;letter-spacing:.1em;cursor:pointer}
+#mission-return-button:hover{background:#eee3cd}
+@keyframes mission-copy-in{to{opacity:1}}
+@keyframes mission-fade-black{to{opacity:1}}
+@keyframes mission-credits-in{to{opacity:1}}
+.route-minimap{position:absolute;right:clamp(14px,3vw,34px);bottom:91px;z-index:3;width:clamp(280px,28vw,440px);padding:10px 12px 9px;border:1px solid #8ce2d477;border-radius:4px;background:#06151bdc;box-shadow:0 6px 24px #02060877;backdrop-filter:blur(8px);pointer-events:none}
+.route-mini-heading{display:flex;justify-content:space-between;align-items:center;color:#a6e9d8;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.11em}
+.route-mini-svg{display:block;width:100%;height:auto;margin-top:3px;overflow:visible}
+.route-mini-line-halo,.route-mini-line{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.route-mini-line-halo{stroke:#06121de6;stroke-width:9}
+.route-mini-line{stroke:#39c9ff;stroke-width:4;filter:drop-shadow(0 0 4px #159ce9)}
+.route-mini-node{stroke:#10201f;stroke-width:2}
+.route-mini-destination{fill:#39eda2}
+.route-mini-player{fill:#f4f3e8;stroke:#12242a;stroke-width:2;filter:drop-shadow(0 0 4px #baf9ff)}
+.route-mini-player-core{fill:#39c9ff}
+.route-heading-arrow{fill:#f5fff9;stroke:#0a1a1e;stroke-width:1.5;stroke-linejoin:round;filter:drop-shadow(0 0 3px #68efff)}
+.route-mini-status{margin-top:1px;color:#e5eee8;font:7px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.05em}
+.terrain-height-legend{position:absolute;top:164px;left:clamp(14px,3vw,34px);z-index:3;display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid #8ce2d477;border-radius:3px;background:#06151bdb;color:#dce7df;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em;pointer-events:none}
+.terrain-height-legend[hidden]{display:none}
+.terrain-height-legend-items{display:flex;flex-wrap:wrap;gap:8px}
+.terrain-height-key{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.terrain-height-swatch{width:8px;height:8px;border-radius:1px}
+.hud-visor{position:absolute;inset:0;z-index:4;pointer-events:none;transform-origin:top center;transform:perspective(1100px) rotateX(-84deg) translateY(-24%);opacity:0;visibility:hidden;transition:transform .72s cubic-bezier(.2,.72,.24,1),opacity .26s ease,visibility 0s linear .72s}
+.hud-visor.is-lowered{transform:perspective(1100px) rotateX(0) translateY(0);opacity:1;visibility:visible;transition:transform .72s cubic-bezier(.2,.72,.24,1),opacity .34s ease,visibility 0s}
+.visor-glass{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,#07151c18 0%,#07151c08 45%,#07151c20 100%);box-shadow:inset 0 0 90px #71dbc11a}
+.visor-glass:before{position:absolute;inset:9px 10px 12px;border:1px solid #91e2c34d;border-radius:42% 42% 8% 8% / 8% 8% 4% 4%;content:"";mask-image:linear-gradient(#000 0%,#000 85%,transparent 100%)}
+.visor-hinge{position:absolute;top:0;left:8%;right:8%;height:7px;border:1px solid #90ddc577;border-top:0;border-radius:0 0 6px 6px;background:linear-gradient(90deg,transparent,#5bd4b266 18%,#5bd4b266 82%,transparent);box-shadow:0 3px 16px #59dfc633}
+.visor-reticle{position:absolute;top:49%;left:50%;width:36px;height:36px;border:1px solid #a9eed866;border-radius:50%;transform:translate(-50%,-50%);opacity:.7}
+.visor-reticle:before,.visor-reticle:after{position:absolute;top:50%;left:50%;background:#a9eed866;content:"";transform:translate(-50%,-50%)}
+.visor-reticle:before{width:52px;height:1px}.visor-reticle:after{width:1px;height:52px}
+.hud-visor .left-readout{border-left-color:#77d9bd;background:#06151bc9}
+.hud-visor .readout-label{color:#9edecb}
+.hud-visor .layer-select[aria-pressed=true]{border-color:#81e0c3;background:#15332f;color:#c5f3e3}
+.hud-visor .data-strip{background:#83dfc555}
+.hud-visor .data-cell{background:#06151be8}
+.hud-visor .data-cell span{color:#9bc8bc}
+.topbar{position:absolute;z-index:6;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px clamp(14px,3vw,34px);border-bottom:1px solid #dbe5e31f;background:linear-gradient(#080c11df,#080c11a8,transparent);pointer-events:none}
+.top-brand{display:flex;align-items:center;color:#e1d3bb;font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em}
+.telemetry{display:flex;align-items:center;gap:clamp(12px,3vw,34px);font:10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em}
+.telemetry-item{color:#abb4b4}
+.telemetry-item b{display:block;margin-top:4px;color:#f1eee4;font-size:13px;font-weight:500;letter-spacing:.04em}
+.live{color:#b4d2ad}
+.live:before{content:"";display:inline-block;width:6px;height:6px;margin-right:7px;border-radius:50%;background:#a4c9a5;box-shadow:0 0 9px #a4c9a577}
+.icon-button{width:34px;height:34px;border:1px solid #b7c1bd55;border-radius:3px;background:#0b1118a8;color:#b4d2ad;font-size:18px;cursor:pointer;pointer-events:auto}
+.icon-button:hover,.icon-button[aria-expanded=true]{background:#263039}
+.view-switcher{position:absolute;z-index:6;top:76px;left:50%;display:flex;gap:3px;padding:3px;border:1px solid #c0cbc555;border-radius:4px;background:#0a1018d9;transform:translateX(-50%)}
+.view-button{min-height:32px;padding:0 12px;border:1px solid transparent;border-radius:2px;background:transparent;color:#b5c0bf;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.09em;cursor:pointer}
+.view-button[aria-pressed=true]{border-color:#d6bd9170;background:#29251f;color:#f0d7b4}
+.display-switcher{position:absolute;z-index:6;top:118px;left:50%;display:flex;gap:3px;padding:3px;border:1px solid #c0cbc555;border-radius:4px;background:#0a1018d9;transform:translateX(-50%)}
+.display-button{min-height:28px;padding:0 10px;border:1px solid transparent;border-radius:2px;background:transparent;color:#b5c0bf;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;cursor:pointer}
+.display-button[aria-pressed=true]{border-color:#d6bd9170;background:#29251f;color:#f0d7b4}
+.mola-briefing,.sample-briefing{position:absolute;top:50%;left:clamp(14px,4vw,48px);z-index:9;display:grid;gap:10px;width:min(380px,calc(100vw - 32px));padding:15px;border:1px solid #8ce2d4;background:#07151bf5;box-shadow:0 10px 32px #0009;transform:translateY(-50%);pointer-events:auto}
+.mola-briefing[hidden],.sample-briefing[hidden]{display:none}
+.mola-briefing-title{color:#a6e9d8;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em}
+.mola-briefing-figure{margin:0}
+.mola-briefing-figure img{display:block;width:100%;max-height:180px;object-fit:cover;background:#111}
+.mola-briefing-figure figcaption{margin-top:5px;color:#9eaaa9;font:7px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace}
+.mola-briefing-copy{margin:0;color:#d4dbd3;font:10px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+.mola-briefing-actions{display:flex;justify-content:flex-end;gap:8px}
+.mola-briefing-actions button,.mola-readout-ack{padding:8px 10px;border:1px solid #82dfc4;background:#15332f;color:#c5f3e3;font:700 8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;cursor:pointer}
+.mola-briefing-actions button:hover,.mola-readout-ack:hover{background:#205044}
+.mola-briefing-actions .mola-briefing-ack{border-color:#bac9c277;background:#111d23;color:#d4dbd3}
+.mola-briefing-actions button:disabled{border-color:#537a70;background:#29443d;color:#d0e3db;cursor:wait}
+.mola-readout-popup{position:absolute;top:clamp(160px,24vh,240px);left:50%;z-index:9;display:grid;justify-items:center;gap:10px;width:min(340px,calc(100vw - 32px));padding:13px 15px;border:1px solid #82dfc4;background:#07151bf2;box-shadow:0 10px 32px #0009;transform:translateX(-50%);pointer-events:auto}
+.mola-readout-popup[hidden]{display:none}
+.mola-readout-title{color:#a6e9d8;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em}
+.mola-readout-values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mola-readout-value span{display:block;color:#9eaaa9;font:7px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.07em}
+.mola-readout-value strong{display:block;margin-top:5px;color:#f2eee3;font:500 13px ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap}
+.left-readout{position:absolute;top:82px;left:clamp(14px,3vw,34px);z-index:2;max-width:230px;padding:12px 14px;border-left:2px solid #c6a579;background:#0a1018bb;pointer-events:none}
+.readout-label{color:#aeb8b7;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.15em}
+.readout-value{margin-top:5px;font-size:13px}
+.bottom-left{position:absolute;bottom:22px;left:clamp(14px,3vw,34px);z-index:2;max-width:360px;pointer-events:none}
+.objective-toast{display:flex;width:min(200px,calc(100vw - 28px));aspect-ratio:1;flex-direction:column;justify-content:center;gap:11px;padding:18px;border:1px solid #d6bd91a0;background:#0a1018ed;color:#e5e3d9;line-height:1.45}
+.objective-kicker{color:#aeb8b7;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.15em}
+.objective-toast strong{color:#e8c99e;font-size:14px;font-weight:700;line-height:1.25}
+.objective-toast>span:last-child{color:#e5e3d9;font-size:11px}
+.interaction-prompt{display:flex;align-items:center;gap:8px;margin-top:7px;padding:8px 10px;border:1px solid #8ce2d477;background:#06151bdc;color:#dce7df;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em}
+.interaction-prompt[hidden]{display:none}
+.interaction-prompt button{padding:5px 8px;border:1px solid #8ce2d477;border-radius:2px;background:#15332f;color:#c5f3e3;font:700 8px ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer;pointer-events:auto}
+.interaction-prompt button:hover{background:#205044}
+.event-alert{position:absolute;top:clamp(150px,22vh,220px);left:50%;z-index:8;display:grid;justify-items:center;gap:8px;width:min(510px,calc(100vw - 32px));padding:12px 16px;border:1px solid #f06455;background:#2c1113f2;color:#ffd2c6;box-shadow:0 6px 24px #0008;font:10px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.05em;text-align:center;transform:translateX(-50%)}
+.event-alert[hidden]{display:none}
+.event-alert[data-level="success"]{border-color:#74c99f;background:#10251eeF;color:#cbf1da}
+.event-alert-action{padding:7px 10px;border:1px solid #f06455;background:#40191a;color:#ffe2dc;font:700 8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;cursor:pointer}
+.event-alert-action:hover{background:#612222}
+.event-alert-ack{padding:7px 10px;border:1px solid #f06455;background:#24191a;color:#ffe2dc;font:700 8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;cursor:pointer}
+.event-alert-ack:hover{background:#402426}
+.event-alert-action[hidden]{display:none}
+.mission-failed{position:absolute;inset:0;z-index:10;display:grid;place-items:center;background:#080b10cc;backdrop-filter:blur(7px)}
+.mission-failed[hidden]{display:none}
+.mission-failed-card{width:min(440px,calc(100vw - 32px));padding:24px;border:1px solid #f06455;background:#10171e;color:#eee9dc;text-align:center}
+.mission-failed-card h2{margin:0;color:#ff8e7c;font:14px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em}
+.mission-failed-card p{color:#c6cdca;font-size:12px;line-height:1.6}
+.mission-failed-card button{padding:10px 14px;border:1px solid #c0b49c;background:#d5c8ae;color:#141719;font:700 9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;cursor:pointer}
+.view-hint{margin-top:9px;color:#d0d5d1b3;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em}
+.side-menu{position:absolute;z-index:7;top:68px;right:clamp(14px,3vw,34px);width:min(330px,calc(100vw - 28px));max-height:calc(100vh - 90px);overflow:auto;border:1px solid #71808a66;border-radius:3px;background:#0a1119ed;backdrop-filter:blur(12px)}
+.side-menu[hidden]{display:none}
+.menu-header{display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid #60707c55}
+.menu-header h2{margin:0;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em}
+.close-menu{border:0;background:transparent;color:#bbc4c3;font-size:18px;cursor:pointer}
+.log-section{padding:14px 16px;border-bottom:1px solid #60707c33}
+.log-section h3{margin:0;color:#d8c6a9;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase}
+.log-section p{margin:6px 0 0;color:#adb6b6;font-size:10px;line-height:1.55}
+.log-status{float:right;color:#9bbf9e;font:9px ui-monospace,SFMono-Regular,Menlo,monospace}
+.log-status[data-state="complete"]{color:#9edecb}
+.log-status[data-state="active"]{color:#ffd27f}
+.mola-request-action{margin:7px 0 0;padding:6px 8px;border:1px solid #82dfc477;background:#15332f;color:#c5f3e3;font:700 8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;cursor:pointer}
+.mola-request-action[hidden]{display:none}
+.mission-list{display:grid;gap:9px;margin:12px 0 0;padding:0;list-style:none}
+.mission-list li{display:flex;justify-content:space-between;gap:10px;color:#c7cfcc;font-size:10px;line-height:1.45}
+.mission-list .log-status{flex:0 0 auto;color:#aab5b2;font-size:8px}
+.mission-list .log-status[data-state="complete"]{color:#9edecb}
+.mission-list .log-status[data-state="active"]{color:#ffd27f}
+.layer-toolbar{position:absolute;top:76px;right:clamp(14px,3vw,34px);z-index:1;display:flex;gap:5px;pointer-events:auto}
+.layer-select{padding:9px 12px;border:1px solid #c0cbc555;border-radius:3px;background:#0a1018c9;color:#c6cdca;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;cursor:pointer;transition:background .16s,border-color .16s,color .16s}
+.layer-select:hover{border-color:#d6bd91;color:#f1eee4}
+.layer-select[aria-pressed=true]{border-color:#d6bd91;background:#25221d;color:#f0d7b4}
+.data-strip{position:absolute;right:clamp(14px,3vw,34px);bottom:22px;z-index:2;display:flex;gap:1px;background:#d6e0df33;pointer-events:none}
+.data-cell{min-width:94px;padding:9px 11px;background:#0a1018df}
+.data-cell span{display:block;color:#9eaaa9;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em}
+.data-cell b{display:block;margin-top:5px;color:#eeeadd;font:11px ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:500}
+.weather-legend{position:absolute;top:164px;left:clamp(14px,3vw,34px);z-index:3;width:min(280px,calc(100vw - 28px));padding:10px 12px;border:1px solid #bac9c255;background:#0a1018dd;backdrop-filter:blur(8px);pointer-events:none}
+.weather-legend[hidden]{display:none}
+.weather-title{color:#d8c6a9;font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em}
+.weather-scale{display:flex;align-items:center;gap:8px;margin-top:9px;color:#cbd2cd;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em}
+.weather-gradient,.radiation-gradient{height:7px;flex:1;border:1px solid #e6e1d433;border-radius:4px}
+.weather-gradient{background:linear-gradient(90deg,#170c35,#4c147a,#b82479,#f03c45,#ff8a28,#ffeb73)}
+.radiation-gradient{background:linear-gradient(90deg,#243bff,#27baff,#35d17a,#f5eb35,#ff8c21,#f33232)}
+.radiation-hazard-key{display:flex;align-items:center;gap:7px;margin-top:8px;padding:6px 7px;border:1px solid #47e9ff88;background:#07303bdd;color:#d9fbff;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em}
+.radiation-hazard-swatch{width:12px;height:8px;flex:0 0 auto;background:#17e6ff;box-shadow:0 0 9px #17e6ff}
+.weather-altitudes,.weather-note{margin-top:7px;color:#b1bfbd;font:8px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em}
+.weather-note{color:#8faaa5}
+.weather-profile{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}
+.weather-profile-cell{padding:5px 6px;border:1px solid #bac9c233;background:#050a10a8}
+.weather-profile-cell span{display:block;color:#9eaaa9;font:7px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.05em}
+.weather-profile-cell b{display:block;margin-top:4px;color:#fff0c4;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:500}
+.touch-controls{position:absolute;right:18px;bottom:120px;z-index:5;display:none;grid-template-columns:repeat(3,43px);grid-template-rows:repeat(3,40px);gap:3px}
+.touch-controls button{border:1px solid #c0cbc566;border-radius:3px;background:#0a1018b8;color:#eee;font-size:17px;touch-action:manipulation}
+.touch-controls button:nth-child(1){grid-column:2;grid-row:1}.touch-controls button:nth-child(2){grid-column:1;grid-row:2}.touch-controls button:nth-child(3){grid-column:2;grid-row:2;color:#d4be9b;font-size:8px}.touch-controls button:nth-child(4){grid-column:3;grid-row:2}.touch-controls button:nth-child(5){grid-column:2;grid-row:3}
+#loading,#error{position:absolute;z-index:8;top:50%;left:50%;width:min(420px,calc(100vw - 32px));transform:translate(-50%,-50%);padding:22px;border:1px solid #71808a66;border-radius:4px;background:#0a1119f2;color:#e9e7df;font-size:13px;line-height:1.6}
+#loading{text-align:center}
+#loading[hidden],#error[hidden]{display:none}
+#error p{margin:0 0 16px}
+.retry-button{padding:9px 12px;border:1px solid #c0cbc566;border-radius:3px;background:#17232c;color:#eee9dc;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;cursor:pointer}
+.retry-button:hover{background:#263039}
+@media(max-width:650px){.topbar{align-items:flex-start;padding-top:12px}.top-brand{font-size:8px}.telemetry{gap:10px}.telemetry-item{font-size:8px}.telemetry-item b{font-size:11px}.hud-visor .left-readout{top:166px;max-width:175px;padding:9px 11px}.readout-value{font-size:11px}.view-switcher{top:58px}.view-button{min-height:26px;padding:0 8px;font-size:8px}.display-switcher{top:91px}.display-button{min-height:24px;padding:0 7px;font-size:7px}.hud-visor .layer-toolbar{top:127px;left:50%;right:auto;transform:translateX(-50%);gap:3px}.layer-select{padding:7px 7px;font-size:7px}.weather-legend{top:238px;left:12px;width:min(260px,calc(100vw - 24px));padding:8px 10px}.weather-title{font-size:8px}.weather-scale,.weather-altitudes,.weather-note{font-size:7px}.terrain-height-legend{top:206px;left:12px;right:12px;justify-content:space-between;gap:6px;padding:6px;font-size:6px}.terrain-height-legend-items{gap:5px}.terrain-height-key{gap:2px}.terrain-height-swatch{width:6px;height:6px}.mola-briefing,.sample-briefing{top:50%;left:50%;width:min(360px,calc(100vw - 24px));padding:11px;transform:translate(-50%,-50%)}.mola-briefing-figure img{max-height:135px}.mola-briefing-copy{font-size:8px}.mola-briefing-actions button{padding:7px;font-size:7px}.mola-readout-popup{top:clamp(220px,34vh,300px);padding:10px}.mola-readout-value strong{font-size:11px}.bottom-left{bottom:105px;max-width:235px}.interaction-prompt{gap:5px;padding:6px;font-size:7px}.interaction-prompt button{padding:5px;font-size:7px}.event-alert{top:185px;padding:9px 10px;font-size:8px}.event-alert-action,.event-alert-ack{padding:6px;font-size:7px}.route-event-key{max-width:calc(100vw - 24px);font-size:7px}.map-event-key{top:105px;left:12px}.route-mini-key{font-size:5px}.data-strip{right:auto;left:12px;bottom:16px}.data-cell{min-width:74px;padding:7px 8px}.data-cell span{font-size:7px}.data-cell b{font-size:9px}.route-minimap{right:10px;bottom:104px;width:min(44vw,300px);padding:7px 9px 6px}.route-mini-heading{font-size:7px}.route-mini-status{font-size:6px}.touch-controls{display:grid}.view-hint{font-size:8px}.welcome-meta{margin-top:34px}.map-instruction{bottom:152px;right:12px;font-size:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}#storm-haze:before,#storm-haze:after{animation:none}}
+</style>
+</head>
+<body>
+<section class="screen title-screen" id="title-screen" aria-labelledby="title-wordmark">
+  <div class="title-screen-content">
+    <p class="title-eyebrow">JEZERO CRATER · MARS</p>
+    <h1 class="title-wordmark" id="title-wordmark">RED PATH</h1>
+    <p class="title-subtitle">HUMAN SURFACE EXPLORATION</p>
+    <button class="start-button" id="show-intro" type="button">MISSION BRIEFING <span aria-hidden="true">→</span></button>
+  </div>
+</section>
+
+<section class="screen" id="welcome" aria-labelledby="game-title" hidden>
+  <div class="briefing-content">
+    <p class="kicker">MISSION BRIEFING · JEZERO CRATER</p>
+    <h1 class="briefing-heading" id="game-title">WELCOME, ASTRONAUT.</h1>
+    <p class="briefing-lead">You have been assigned a mission to explore Jezero Crater and investigate Mars' geology.</p>
+    <h2 class="briefing-section-title">YOUR MISSION OBJECTIVES</h2>
+    <ul class="briefing-list">
+      <li>Navigate safely from the crater floor to the delta front.</li>
+      <li>Identify and document geological formations.</li>
+      <li>Collect two rock samples:
+        <ul class="sample-list">
+          <li>Sample 01: Igneous rock from the Máaz formation.</li>
+          <li>Sample 02: Sedimentary rock from the ancient delta.</li>
+        </ul>
+      </li>
+      <li>Monitor environmental conditions and respond to hazard alerts.</li>
+      <li>Record observations and complete all mission tasks.</li>
+    </ul>
+    <p class="briefing-guidance">RED PATH will guide you with augmented-reality (AR) navigation, track your objectives, and alert you to potential dangers, including dunes, unstable terrain, and dust storms.</p>
+    <div class="briefing-footer">
+      <p class="mission-ready">Mission ready to begin. Good luck.</p>
+      <button class="start-button" id="start" type="button">ENTER THE GAME <span aria-hidden="true">→</span></button>
+    </div>
+  </div>
+</section>
+
+<main class="screen" id="simulator" data-display="reality" aria-label="Mars surface exploration" hidden>
+  <div id="scene" tabindex="-1" aria-label="Three-dimensional view of the Martian surface"></div>
+  <div id="storm-haze" aria-hidden="true"></div>
+  <div id="map2d" data-layer="topography" aria-label="Map of Jezero">
+    <img src="./good_mars-upscaled.jpeg" alt="Enhanced map image of Jezero crater and the delta" draggable="false">
+    <svg id="map-overlay" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-label="Player position on the Jezero surface map">
+      <rect class="map-border" x="14" y="14" width="972" height="572"></rect>
+      <path class="map-grid" d="M200 14V586 M400 14V586 M600 14V586 M800 14V586 M14 120H986 M14 240H986 M14 360H986 M14 480H986"></path>
+      <path class="map-route-halo" id="map-route-halo" aria-hidden="true"></path>
+      <path class="map-route" id="map-route" aria-hidden="true"></path>
+      <g id="map-event-markers" aria-label="Missions and events along the route"></g>
+      <g aria-hidden="true">
+        <circle class="map-route-node map-route-start" id="map-route-start" r="1.5"></circle>
+        <circle class="map-route-node map-route-destination" id="map-route-destination" r="1.5"></circle>
+        <text class="map-route-label" id="map-route-destination-label">DELTA FRONT</text>
+      </g>
+      <circle class="map-player" id="map-player" cx="100" cy="500" r="1.6"></circle>
+      <g id="map-player-arrow" aria-label="Player heading">
+        <path class="route-heading-arrow" d="M 0 -2.2 L 1 1 L 0 .4 L -1 1 Z"></path>
+      </g>
+      <text class="map-label" x="190" y="150">JEZERO / SURFACE MAP</text>
+      <text class="map-label" x="190" y="480">ILLUSTRATIVE ROUTE</text>
+    </svg>
+    <aside class="route-event-key map-event-key" aria-label="Map route event key">1 Máaz sample · 2 Loose sand/radiation · 3 Temperature · 4 Ground · 5 Sandstorm · 6 Temperature · 7 Delta sample · A Early MOLA · B Final MOLA</aside>
+    <div class="map-instruction" id="map-instruction" hidden>FOLLOW THE BLUE ROUTE · CLICK TO SET A CUSTOM DESTINATION</div>
+  </div>
+  <header class="topbar">
+    <div class="top-brand">RED PATH</div>
+    <div class="telemetry">
+      <span class="telemetry-item">O₂<b id="oxygen">100%</b></span>
+      <button class="icon-button" id="menu-button" type="button" aria-label="Open science log" aria-expanded="false">✓</button>
+    </div>
+  </header>
+  <nav class="view-switcher" role="group" aria-label="Exploration mode">
+    <button class="view-button" type="button" data-view="first-person" aria-pressed="true">FIRST PERSON</button>
+    <button class="view-button" type="button" data-view="map" aria-pressed="false">2D MAP</button>
+  </nav>
+  <nav class="display-switcher" role="group" aria-label="Visor mode">
+    <button class="display-button" type="button" data-display="reality" aria-pressed="true">NORMAL</button>
+    <button class="display-button" type="button" data-display="hud" aria-pressed="false">HUD VISOR</button>
+  </nav>
+  <div class="hud-visor" id="hud-visor" aria-hidden="true">
+    <div class="visor-glass" aria-hidden="true"><span class="visor-hinge"></span><span class="visor-reticle"></span></div>
+    <section class="left-readout" aria-live="polite">
+      <div class="readout-label">FIELD POSITION</div>
+      <div class="readout-value" id="position">SECTOR 01 · 01</div>
+    </section>
+    <nav class="layer-toolbar" aria-label="HUD data layers">
+      <button class="layer-select" type="button" data-layer="radiation" aria-pressed="false">RADIATION</button>
+      <button class="layer-select" type="button" data-layer="topography" aria-pressed="true">TOPOGRAPHY</button>
+      <button class="layer-select" type="button" data-layer="temperature" aria-pressed="false">TEMPERATURE</button>
+    </nav>
+    <aside class="terrain-height-legend" id="terrain-height-legend" hidden aria-label="Terrain overlay height key">
+      <span>HEIGHT ABOVE YOU</span>
+      <span class="terrain-height-legend-items">
+        <span class="terrain-height-key"><i class="terrain-height-swatch" style="background:#16b66c"></i>&lt;1 m</span>
+        <span class="terrain-height-key"><i class="terrain-height-swatch" style="background:#e2cd27"></i>1–3 m</span>
+        <span class="terrain-height-key"><i class="terrain-height-swatch" style="background:#ff922b"></i>4–7 m</span>
+        <span class="terrain-height-key"><i class="terrain-height-swatch" style="background:#ec3a36"></i>≥8 m</span>
+      </span>
+    </aside>
+    <aside class="route-minimap" aria-label="Simplified proposed route map">
+      <div class="route-mini-heading"><span>ROUTE TO DELTA FRONT</span><span aria-label="North">N ↑</span></div>
+      <svg class="route-mini-svg" id="route-mini-svg" viewBox="0 0 170 150" role="img" aria-label="Route from the rover toward Delta Front">
+        <path class="route-mini-line-halo" id="route-mini-line-halo"></path>
+        <path class="route-mini-line" id="route-mini-line"></path>
+        <g id="route-mini-event-markers" aria-label="Missions and events along the route"></g>
+        <circle class="route-mini-node route-mini-destination" id="route-mini-destination" r="5"></circle>
+        <g id="route-mini-player" aria-hidden="true">
+          <circle class="route-mini-player" r="7"></circle>
+          <circle class="route-mini-player-core" r="2.5"></circle>
+          <path class="route-heading-arrow" d="M 0 -8 L 3 2 L 0 0 L -3 2 Z"></path>
+        </g>
+      </svg>
+      <div class="route-mini-status" id="route-mini-status" aria-live="polite">START · FOLLOW BLUE ROUTE</div>
+      <div class="route-mini-key">1 Máaz · 2 Sand/Rad · 3 Temp · 4 Ground · 5 Storm · 6 Temp · 7 Delta · A Early MOLA · B Final MOLA</div>
+    </aside>
+    <section class="bottom-left">
+      <div class="objective-toast" aria-live="polite">
+        <span class="objective-kicker">CURRENT OBJECTIVE</span>
+        <strong id="active-objective">GEOGRAPHY</strong>
+        <span id="objective-progress">Explore the terrain</span>
+      </div>
+      <div class="interaction-prompt" id="interaction-prompt" hidden><span id="interaction-label"></span><button id="interact-button" type="button">INTERACT · Y</button></div>
+      <div class="view-hint" id="view-hint">W A S D / ARROWS · WALK &nbsp;|&nbsp; DRAG · LOOK &nbsp;|&nbsp; Y · INTERACT</div>
+    </section>
+    <section class="data-strip" aria-label="Field readings">
+      <div class="data-cell"><span id="reading-a-label">REL ELEVATION</span><b id="reading-a">0 m</b></div>
+      <div class="data-cell"><span id="reading-b-label">SLOPE</span><b id="reading-b">2.1°</b></div>
+      <div class="data-cell"><span id="reading-c-label">ROUGHNESS</span><b id="reading-c">LOW</b></div>
+    </section>
+  </div>
+  <aside class="mola-briefing" id="mola-briefing-popup" role="dialog" aria-modal="false" aria-labelledby="mola-briefing-title" hidden>
+    <div class="mola-briefing-title" id="mola-briefing-title">MOLA INSTRUMENT BRIEFING</div>
+    <figure class="mola-briefing-figure">
+      <img src="./nasa-mola-instrument.jpg" alt="Photograph of the Mars Orbiter Laser Altimeter instrument during testing">
+      <figcaption>NASA/GSFC · Photograph of the MOLA instrument</figcaption>
+    </figure>
+    <p class="mola-briefing-copy">MOLA, the Mars Orbiter Laser Altimeter aboard Mars Global Surveyor, sent laser pulses toward Mars and measured their return time to determine surface elevation. Its measurements helped map the planet’s topography. Start the scan to calculate this location’s relative elevation, track relief, and slope.</p>
+    <div class="mola-briefing-actions">
+      <button class="mola-briefing-ack" id="mola-briefing-ack" type="button">ACKNOWLEDGE</button>
+      <button id="mola-briefing-start" type="button">RUN NUMERIC TEST</button>
+    </div>
+  </aside>
+  <aside class="sample-briefing mola-briefing" id="sample-briefing-popup" role="dialog" aria-modal="false" aria-labelledby="sample-briefing-title" hidden>
+    <div class="mola-briefing-title" id="sample-briefing-title"></div>
+    <figure class="mola-briefing-figure">
+      <img id="sample-briefing-image" alt="">
+      <figcaption id="sample-briefing-caption"></figcaption>
+    </figure>
+    <p class="mola-briefing-copy" id="sample-briefing-copy"></p>
+    <div class="mola-briefing-actions">
+      <button class="mola-briefing-ack" id="sample-briefing-ack" type="button">ACKNOWLEDGE</button>
+    </div>
+  </aside>
+  <aside class="mola-readout-popup" id="mola-readout-popup" role="status" aria-live="assertive" aria-label="MOLA surface readings" hidden>
+    <div class="mola-readout-title">MOLA SURFACE READINGS</div>
+    <div class="mola-readout-values">
+      <div class="mola-readout-value"><span>REL. ELEVATION</span><strong id="mola-reading-elevation"></strong></div>
+      <div class="mola-readout-value"><span>TRACK RELIEF</span><strong id="mola-reading-relief"></strong></div>
+      <div class="mola-readout-value"><span>SLOPE</span><strong id="mola-reading-slope"></strong></div>
+    </div>
+    <button class="mola-readout-ack" id="mola-readout-ack" type="button">ACKNOWLEDGE</button>
+  </aside>
+  <aside class="weather-legend" id="weather-legend" hidden aria-label="Modeled three-dimensional air temperature legend">
+    <div class="weather-title">THERMAL CAMERA · SURFACE + AIR MODEL</div>
+    <div class="weather-scale"><span>COOLER</span><span class="weather-gradient" aria-hidden="true"></span><span>WARMER</span></div>
+    <div class="weather-altitudes">MODELED AIR PROFILE · 3 / 9 / 18 / 31 m ABOVE TERRAIN</div>
+    <div class="weather-profile" aria-label="Modeled air temperature at the field team">
+      <div class="weather-profile-cell"><span>3 M</span><b id="weather-air-3">— °C</b></div>
+      <div class="weather-profile-cell"><span>9 M</span><b id="weather-air-9">— °C</b></div>
+      <div class="weather-profile-cell"><span>18 M</span><b id="weather-air-18">— °C</b></div>
+      <div class="weather-profile-cell"><span>31 M</span><b id="weather-air-31">— °C</b></div>
+    </div>
+  </aside>
+  <aside class="weather-legend" id="radiation-legend" hidden aria-label="Relative sunlight heatmap across sky and terrain">
+    <div class="weather-title">RADIATION · SKY + TERRAIN EXPOSURE</div>
+    <div class="weather-scale"><span>LOW</span><span class="radiation-gradient" aria-hidden="true"></span><span>HIGH</span></div>
+    <div class="radiation-hazard-key"><span class="radiation-hazard-swatch" aria-hidden="true"></span>LOOSE SAND · LOWER RADIATION</div>
+    <div class="weather-altitudes">AIR EXPOSURE PROFILE · 20 / 40 / 60 / 80 m ABOVE TERRAIN</div>
+    <div class="weather-profile" aria-label="Relative direct-sun exposure in the air">
+      <div class="weather-profile-cell"><span>20 M AIR</span><b id="radiation-air-20">—%</b></div>
+      <div class="weather-profile-cell"><span>40 M AIR</span><b id="radiation-air-40">—%</b></div>
+      <div class="weather-profile-cell"><span>60 M AIR</span><b id="radiation-air-60">—%</b></div>
+      <div class="weather-profile-cell"><span>80 M AIR</span><b id="radiation-air-80">—%</b></div>
+    </div>
+    <div class="weather-note">Continuous across the sky and terrain from the player outward. Colors use CSV solar-zenith data and modeled sun/terrain geometry.</div>
+  </aside>
+  <div class="touch-controls" role="group" aria-label="Touch controls">
+    <button type="button" data-key="ArrowUp" aria-label="Move forward">↑</button><button type="button" data-key="ArrowLeft" aria-label="Move left">←</button><button type="button" aria-hidden="true" tabindex="-1">MOVE</button><button type="button" data-key="ArrowRight" aria-label="Move right">→</button><button type="button" data-key="ArrowDown" aria-label="Move backward">↓</button>
+  </div>
+  <aside class="side-menu" id="science-menu" aria-label="Science log" hidden>
+    <div class="menu-header"><h2>EXCURSION SCIENCE LOG</h2><button class="close-menu" id="close-menu" type="button" aria-label="Close log">×</button></div>
+    <section class="log-section"><h3>ROUTE MISSIONS <span class="log-status" id="mission-count">0 / 5</span></h3>
+      <ol class="mission-list">
+        <li><span>Máaz formation · Collect igneous rock sample</span><span class="log-status" id="mission-maaz-status" data-state="pending">PENDING</span></li>
+        <li><span>Temperature survey 1 · Record reading</span><span class="log-status" id="mission-temp1-status" data-state="pending">PENDING</span></li>
+        <li><span>Ground condition · Measure compaction</span><span class="log-status" id="mission-ground-status" data-state="pending">PENDING</span></li>
+        <li><span>Temperature survey 2 · Record reading</span><span class="log-status" id="mission-temp2-status" data-state="pending">PENDING</span></li>
+        <li><span>Delta zone · Collect sedimentary rock</span><span class="log-status" id="mission-delta-status" data-state="pending">PENDING</span></li>
+      </ol>
+      <p>Follow the route markers. Approach each instrument or outcrop and press Y (or INTERACT) to perform its task.</p>
+    </section>
+    <section class="log-section"><h3>MOLA TRACK REQUEST</h3>
+      <p>Request A <span class="log-status" id="mola-start-status">SCHEDULED</span></p>
+      <button class="mola-request-action" id="mola-start-action" type="button" hidden>OPEN MOLA A BRIEFING</button>
+      <p>Final request B <span class="log-status" id="mola-final-status">SCHEDULED</span></p>
+      <button class="mola-request-action" id="mola-final-action" type="button" hidden>RUN FINAL MOLA B</button>
+    </section>
+  </aside>
+  <div class="event-alert" id="event-alert" role="status" aria-live="assertive" hidden><span id="event-alert-message"></span><button class="event-alert-action" id="event-alert-action" type="button" hidden>RETRY MOLA TRACK</button><button class="event-alert-ack" id="event-alert-ack" type="button">ACKNOWLEDGE</button></div>
+  <section class="mission-failed" id="mission-failed" role="alertdialog" aria-modal="true" aria-labelledby="mission-failed-title" hidden>
+    <div class="mission-failed-card"><h2 id="mission-failed-title">MISSION FAILED</h2><p id="mission-failed-message">The loose-sand radiation hazard was entered without checking the radiation sensor.</p><button id="restart-mission" type="button">RESTART EXPEDITION</button></div>
+  </section>
+  <section id="mission-complete" role="status" aria-live="assertive" hidden>
+    <div id="mission-complete-content">
+      <p id="mission-complete-kicker">YOU HAVE SUCCESSFULLY EXPLORED JEZERO CRATER</p>
+      <h1>MISSION ACCOMPLISHED</h1>
+      <p>EXPLORATION COMPLETE</p>
+    </div>
+  </section>
+  <section id="mission-credits" role="status" aria-live="polite" aria-label="Mission credits" hidden>
+    <div id="mission-credits-content">
+      <p id="mission-credits-copy">Made by: Alejandro Gallardo, Esperanza Sánchez, Lola Avedillo, Lilián Sarabia and Timothé Tillie.</p>
+      <button id="mission-return-button" type="button">RETURN TO START</button>
+    </div>
+  </section>
+  <div id="loading" role="status" hidden>Loading Mars surface…</div>
+  <div id="error" role="alert" hidden><p id="error-message"></p><button class="retry-button" id="back-to-welcome" type="button">BACK TO START</button></div>
+</main>
+<script src="./three.min.js"></script>
+<script src="./OBJLoader.js"></script>
+<script src="./DRACOLoader.js"></script>
+<script src="./GLTFLoader.js"></script>
+<script>
+(() => {
+  const titleScreen=document.getElementById("title-screen");
+  const welcome=document.getElementById("welcome");
+  const simulator=document.getElementById("simulator");
+  const error=document.getElementById("error");
+  const errorMessage=document.getElementById("error-message");
+  const loading=document.getElementById("loading");
+  const sceneHost=document.getElementById("scene");
+  const stormHaze=document.getElementById("storm-haze");
+  const keys=new Set();
+  const FIELD_SCALE=7.5;
+  const FIELD_EXPANSION_X=4,FIELD_EXPANSION_Z=2.5;
+  const WORLD_W=400*FIELD_SCALE*FIELD_EXPANSION_X;
+  const WORLD_MIN_Z=-480*FIELD_SCALE,WORLD_MAX_Z=120*FIELD_SCALE;
+  const WORLD_D=WORLD_MAX_Z-WORLD_MIN_Z,WORLD_CENTER_Z=(WORLD_MIN_Z+WORLD_MAX_Z)/2;
+  const STEP=6,CAMERA_EYE_HEIGHT=1.9,MISSION_DESTINATION_RADIUS=10;
+  const TERRAIN_SEGMENTS_X=160*FIELD_EXPANSION_X,TERRAIN_SEGMENTS_Z=120*FIELD_EXPANSION_Z;
+  const BASEMAP_ROVER_MARKER={x:506,y:490};
+  const MAP_SCALE_X=952/WORLD_W,MAP_SCALE_Z=96/WORLD_MAX_Z;
+  const MINI_MAP_ORIGIN={x:28,y:137},MINI_MAP_SCALE_X=.22,MINI_MAP_SCALE_Z=.19;
+  const TERRAIN_OVERLAY_HALF_FOV=55;
+  const LOOSE_SAND_SLOW_CORE_RADIUS=48,LOOSE_SAND_SLOW_OUTER_RADIUS=85;
+  const SANDSTORM_ALERT_RADIUS=72,SANDSTORM_CHECK_RADIUS=38,SANDSTORM_CLEAR_RADIUS=84,SANDSTORM_CORE_RADIUS=20,SANDSTORM_EFFECT_RADIUS=80;
+  const EXPEDITION_ROUTE=[
+    {x:0,z:0,type:"start"},
+    {x:180,z:-90,type:"bend"},
+    {x:420,z:-220,type:"bend"},
+    {x:300,z:-390,type:"bend"},
+    {x:460,z:-530,type:"bend"},
+    {x:500,z:-570,type:"bend"},
+    {x:500,z:-620,type:"destination",label:"DELTA FRONT"}
+  ];
+  const ROUTE_STOPS=EXPEDITION_ROUTE.filter(point=>point.type!=="bend");
+  const MOLA_START_REQUEST_DELAY_SECONDS=8,MOLA_FINAL_TRIGGER_RADIUS=95;
+  const MOLA_APPROACH_DURATION_MS=3000,MOLA_SCAN_DURATION_MS=5000,MOLA_DEPART_DURATION_MS=5000;
+  const MOLA_APPROACH_DISTANCE=180,MOLA_DEPART_DISTANCE=220;
+  const MOLA_ROUTE_EVENTS=[
+    {id:"mola-start",label:"MOLA A · Early topographic pass",shortLabel:"A",x:40,z:-20,triggered:false,announced:false,requested:false,completed:false},
+    {id:"mola-final",label:"MOLA B · Final topographic pass",shortLabel:"B",x:480,z:-565,triggered:false,announced:false,requested:false,completed:false}
+  ];
+  const M20_ORIGIN_ELEVATION=-2569.910000;
+  // NASA/JPL M20_waypoints.json samples: [east offset m, north offset m, elev_geoid m].
+  const M20_WAYPOINT_ELEVATIONS=[
+    [0.000,0.000,-2569.910000],
+    [3.431,-4.965,-2569.861816],
+    [8.338,30.106,-2569.935000],
+    [34.382,38.692,-2569.287000],
+    [54.554,30.895,-2568.930000],
+    [50.116,34.091,-2568.969000],
+    [52.623,31.844,-2568.925800],
+    [25.080,32.770,-2569.601563],
+    [17.480,4.319,-2569.808000],
+    [7.800,7.411,-2569.992000],
+    [7.636,13.964,-2569.994200],
+    [7.808,18.564,-2570.020000],
+    [7.576,18.720,-2570.024902],
+    [36.197,9.002,-2569.538818],
+    [52.467,14.469,-2569.040000],
+    [63.730,9.996,-2568.980000],
+    [70.508,7.425,-2569.050000],
+    [75.329,2.316,-2569.001000],
+    [79.380,-5.840,-2569.315000],
+    [91.740,-20.696,-2569.140000],
+    [95.669,-29.706,-2568.814209],
+    [78.194,-24.176,-2569.300000],
+    [74.959,-27.678,-2569.200000],
+    [74.288,-44.277,-2569.230000],
+    [71.730,-51.239,-2569.197000],
+    [36.075,-81.350,-2568.954000],
+    [17.353,-96.593,-2568.860000],
+    [-1.199,-130.641,-2568.932000],
+    [-10.633,-155.252,-2568.510000],
+    [-11.574,-162.980,-2568.522461],
+    [-31.934,-168.870,-2568.672852],
+    [-65.243,-207.892,-2568.707275],
+    [-69.831,-262.458,-2568.900000],
+    [-75.774,-297.339,-2569.137000],
+    [-83.416,-329.446,-2568.073000],
+    [-82.890,-299.683,-2568.958984],
+    [-70.316,-365.621,-2568.479248],
+    [-74.540,-372.633,-2568.212891],
+    [-59.896,-390.397,-2568.582000],
+    [-52.098,-429.506,-2569.112000],
+    [-51.772,-426.693,-2569.176000],
+    [-26.706,-449.459,-2569.245000],
+    [47.200,-525.883,-2570.634000],
+    [65.289,-628.009,-2573.354000],
+    [79.193,-720.297,-2575.162000],
+    [71.016,-799.648,-2580.235000],
+    [65.128,-833.543,-2582.629883],
+    [71.117,-868.278,-2583.791504],
+    [-180.389,-893.837,-2583.671631],
+    [-215.877,-890.025,-2581.385254],
+    [-230.106,-887.084,-2579.604000],
+    [-305.334,-836.558,-2579.368000],
+    [-369.664,-818.085,-2574.369000],
+    [-366.571,-823.192,-2574.524000],
+    [-425.136,-794.100,-2574.186000],
+    [-573.420,-715.995,-2571.841000],
+    [-539.667,-706.860,-2574.247000],
+    [-513.042,-672.987,-2575.186000],
+    [-485.633,-669.409,-2574.431641],
+    [-476.522,-665.590,-2573.581543],
+    [-492.779,-642.659,-2573.320000],
+    [-462.304,-635.129,-2571.049561],
+    [-445.608,-637.856,-2568.981689],
+    [-442.690,-632.240,-2569.154053],
+    [-442.276,-632.051,-2569.154000],
+    [-440.051,-634.314,-2568.705811],
+    [-475.113,-637.330,-2572.029541],
+    [-498.185,-663.009,-2574.433838],
+    [-495.018,-661.840,-2574.299316],
+    [-530.607,-702.791,-2574.898438],
+    [-534.830,-709.314,-2574.437500],
+    [-532.700,-712.764,-2574.295166],
+    [-536.262,-712.557,-2574.261475],
+    [-538.147,-712.368,-2574.224609],
+    [-556.055,-708.409,-2573.410889],
+    [-520.654,-800.322,-2573.959717],
+    [-432.869,-824.766,-2574.644000],
+    [-361.239,-813.953,-2574.823975],
+    [-302.577,-844.327,-2579.285400],
+    [-232.606,-880.640,-2580.704346],
+    [-221.126,-886.089,-2581.134277],
+    [-212.719,-895.629,-2580.728760],
+    [-216.225,-899.287,-2579.959229],
+    [-139.279,-927.757,-2584.673584],
+    [83.039,-913.918,-2585.345215],
+    [79.910,-854.339,-2581.982422],
+    [95.970,-784.918,-2577.262451],
+    [68.977,-697.926,-2575.001465],
+    [71.239,-612.293,-2573.031006],
+    [56.008,-538.425,-2570.853516],
+    [50.052,-515.725,-2570.812988],
+    [32.446,-269.049,-2569.759521],
+    [56.819,-233.512,-2569.718750],
+    [56.611,-233.380,-2569.718750],
+    [49.637,-148.014,-2569.205078],
+    [72.238,-45.701,-2569.221924],
+    [87.262,-43.457,-2568.722168],
+    [87.073,-43.005,-2568.722168],
+    [33.049,94.882,-2568.833984],
+    [193.369,258.877,-2569.756104],
+    [193.350,258.971,-2569.756104],
+    [452.860,389.596,-2571.201904],
+    [616.969,536.092,-2570.643555],
+    [625.169,737.537,-2568.769531],
+    [621.342,750.545,-2568.821045],
+    [-1412.830,870.814,-2547.731445]
+  ];
+  const M20_WAYPOINT_RADIUS=45,M20_GRID_CELL_SIZE=40;
+  const M20_WAYPOINT_BOUNDS=M20_WAYPOINT_ELEVATIONS.reduce((bounds,[x,z])=>({
+    minX:Math.min(bounds.minX,x),maxX:Math.max(bounds.maxX,x),
+    minZ:Math.min(bounds.minZ,z),maxZ:Math.max(bounds.maxZ,z)
+  }),{minX:Infinity,maxX:-Infinity,minZ:Infinity,maxZ:-Infinity});
+  const m20WaypointGrid=new Map();
+  for(const sample of M20_WAYPOINT_ELEVATIONS){
+    const cellX=Math.floor(sample[0]/M20_GRID_CELL_SIZE);
+    const cellZ=Math.floor(sample[1]/M20_GRID_CELL_SIZE);
+    const key=`${cellX},${cellZ}`;
+    if(!m20WaypointGrid.has(key))m20WaypointGrid.set(key,[]);
+    m20WaypointGrid.get(key).push(sample);
+  }
+  const campaignTasks=[
+    {id:"maaz",type:"sample",label:"Máaz formation · Collect igneous rock sample",x:115,z:-55},
+    {id:"loose-sand",type:"sand",label:"Loose sand · Check radiation sensor before entry",x:270,z:-165,isHazard:true},
+    {id:"temperature-1",type:"temperature",label:"Temperature survey 1 · Record reading",x:395,z:-245},
+    {id:"ground-condition",type:"compaction",label:"Ground condition · Measure compaction",x:350,z:-335},
+    {id:"sandstorm",type:"storm",label:"Sandstorm · Traverse low visibility",x:330,z:-425,isHazard:true},
+    {id:"temperature-2",type:"temperature",label:"Temperature survey 2 · Record reading",x:450,z:-520},
+    {id:"delta-sediment",type:"sample",label:"Delta zone · Collect sedimentary rock",x:500,z:-600}
+  ].map(task=>({...task,status:"PENDING",value:null,briefed:false}));
+  const routeTasks=campaignTasks.filter(task=>!task.isHazard);
+  const looseSandTask=campaignTasks.find(task=>task.id==="loose-sand");
+  const sites=campaignTasks
+    .filter(task=>task.type!=="sand"&&task.type!=="storm")
+    .map(task=>({
+      x:task.x,z:task.z,label:task.label,kind:task.type==="sample"?"Rock samples":"Science instrument",
+      taskId:task.id,recorded:false
+    }));
+  const rocks=[
+    [-43,-31,2.4],[-28,-9,1.8],[-14,-35,2.8],[32,-42,2.9],
+    [58,-2,2.4],[37,32,1.9],[-34,28,2.5],[-54,34,2.2],[47,40,2.1]
+  ].map(([x,z,r])=>[x*FIELD_SCALE,z*FIELD_SCALE,r]);
+  let renderer,scene,camera,player,terrainMesh,clock,terrainTexture,rocksGroup,markerGroup,skyDome,temperatureSurface,radiationSurface,temperatureSurfaceOffsets=[],radiationHazardSamples=new Float32Array(0),temperaturePalette=[],radiationPalette=[],resizeObserver,surveyor,surveyorLoader,dracoLoader,molaBeam,molaFootprint;
+  let terrainAwarenessSurface,looseSandZone,missionEndingCameraPosition=null,missionEndingCameraTarget=null;
+  let initialized=false,started=false,missionCompleted=false,destinationReminderShown=false,viewMode="first-person",displayMode="reality",waypoint=null,yaw=0,pitch=0,activeLayer="topography",oxygen=100,sol=1,walkPhase=0,lastDataLayerUpdate=0,lastTemperatureFieldUpdate=0,lastRadiationFieldUpdate=0,lastReadingsUpdate=0,missionStartTime=0,drag=null,surveyorLoading=false,surveyorPassActive=false,surveyorPassStart=0,surveyorPassSite=null,autoTrackSurveyor=false,surveyTrackingCancelled=false,surveyorPhase="idle",surveyorMeasurements=null;
+  let radiationSensorChecked=false,looseSandWarningShown=false,looseSandEntered=false,looseSandCleared=false,looseSandIntensity=0,sandstormActive=false,sandstormIntensity=0,sandstormTriggered=false,sandstormSensorChecked=false,missionFailed=false,nearbySite=null,activeTaskBriefingId=null,activeMolaEventId=null,pendingMolaEventId=null,alertActionHandler=null,alertAcknowledgeHandler=null,activeEventAlert=null,eventAlertQueue=[],routeEventMarkersInitialized=false,samplePickupAnimation=null,compactionProbeAnimation=null,compactionProbePlunger=null;
+  const sampleModels=new Map();
+  // Minute-spaced solar-zenith samples interpolated from the supplied CSV's LTST series.
+  const SOLAR_ZENITH_PROFILE=[
+    52.53,52.77,53.00,53.23,53.46,53.70,53.93,54.16,54.40,54.63,
+    54.86,55.09,55.33,55.56,55.79,56.03,56.26,56.50,56.73,56.96,
+    57.20,57.43,57.66,57.90,58.13,58.37,58.60,58.83,59.07,59.30,
+    59.54,59.77,60.01,60.24,60.48,60.71,60.95,61.18,61.41,61.65,
+    61.88,62.12,62.35,62.59,62.82,63.06,63.29,63.53,63.76,64.00,
+    64.23,64.47,64.70,64.94,65.18,65.41,65.65
+  ];
+  const SOLAR_ZENITH_STEP_SECONDS=60,SOLAR_ZENITH_DURATION_SECONDS=56*60+4;
+  const REFERENCE_SOLAR_ZENITH=57.77;
+  const REFERENCE_SURFACE_TEMP_K=209.15;
+  const AIR_SAMPLE_ALTITUDES=[3,9,18,31];
+  const RADIATION_AIR_ALTITUDES=[20,40,60,80];
+
+  function showError(text){
+    error.hidden=false;
+    loading.hidden=true;
+    errorMessage.textContent=text;
+  }
+  function setTaskStatus(taskId,status,completed=false){
+    const task=campaignTasks.find(item=>item.id===taskId);
+    if(!task||task.isHazard)return;
+    if(task.completed&&!completed)return;
+    task.status=status;
+    task.completed=task.completed||completed;
+    const statusElement=document.getElementById({
+      maaz:"mission-maaz-status",
+      "temperature-1":"mission-temp1-status",
+      "ground-condition":"mission-ground-status",
+      "temperature-2":"mission-temp2-status",
+      "delta-sediment":"mission-delta-status"
+    }[taskId]);
+    statusElement.textContent=status;
+    statusElement.dataset.state=task.completed?"complete":status==="PENDING"?"pending":"active";
+    if(routeEventMarkersInitialized){
+      document.getElementById(`map-event-${taskId}`).dataset.completed=String(task.completed);
+      document.getElementById(`mini-event-${taskId}`).dataset.completed=String(task.completed);
+    }
+    document.getElementById("mission-count").textContent=`${routeTasks.filter(item=>item.completed).length} / ${routeTasks.length}`;
+    const nextTask=routeTasks.find(item=>!item.completed);
+    document.getElementById("active-objective").textContent=nextTask?nextTask.label.split(" · ")[0].toUpperCase():"ROUTE MISSIONS COMPLETE";
+    document.getElementById("objective-progress").textContent=nextTask
+      ?nextTask.label.split(" · ")[1]||nextTask.label
+      :"All route tasks completed";
+  }
+  function showEventAlert(message,level="warning",actionLabel=null,actionHandler=null,acknowledgeHandler=null,alertKey=null){
+    eventAlertQueue.push({message,level,actionLabel,actionHandler,acknowledgeHandler,alertKey});
+    renderEventAlert();
+  }
+  function renderEventAlert(){
+    if(activeEventAlert||!eventAlertQueue.length)return;
+    activeEventAlert=eventAlertQueue.shift();
+    const alert=document.getElementById("event-alert");
+    document.getElementById("event-alert-message").textContent=activeEventAlert.message;
+    alert.dataset.level=activeEventAlert.level;
+    alert.hidden=false;
+    const action=document.getElementById("event-alert-action");
+    action.hidden=!activeEventAlert.actionLabel;
+    action.disabled=false;
+    action.textContent=activeEventAlert.actionLabel||"";
+    alertActionHandler=activeEventAlert.actionHandler;
+    alertAcknowledgeHandler=activeEventAlert.acknowledgeHandler;
+  }
+  function clearEventAlert(alertKey){
+    if(!alertKey)return;
+    eventAlertQueue=eventAlertQueue.filter(item=>item.alertKey!==alertKey);
+    if(activeEventAlert?.alertKey!==alertKey)return;
+    document.getElementById("event-alert").hidden=true;
+    activeEventAlert=null;
+    alertActionHandler=null;
+    alertAcknowledgeHandler=null;
+    renderEventAlert();
+  }
+  function acknowledgeEventAlert(){
+    document.getElementById("event-alert").hidden=true;
+    const acknowledgeHandler=alertAcknowledgeHandler;
+    activeEventAlert=null;
+    alertActionHandler=null;
+    alertAcknowledgeHandler=null;
+    acknowledgeHandler?.();
+    renderEventAlert();
+  }
+  function setMolaEventStatus(event,status){
+    const statusElement=document.getElementById(`${event.id}-status`);
+    const actionButton=document.getElementById(`${event.id}-action`);
+    statusElement.textContent=status;
+    statusElement.dataset.state=event.completed?"complete":event.triggered?"active":"pending";
+    actionButton.hidden=!event.triggered||event.requested||event.completed;
+    if(routeEventMarkersInitialized){
+      for(const id of [`map-event-${event.id}`,`mini-event-${event.id}`]){
+        document.getElementById(id).dataset.completed=String(event.completed);
+        document.getElementById(id).dataset.active=String(event.triggered&&!event.completed);
+      }
+    }
+  }
+  function announceNextMolaEvent(){
+    if(surveyorLoading||surveyorPassActive)return;
+    const availableEvents=MOLA_ROUTE_EVENTS.filter(item=>item.triggered&&!item.completed&&!item.requested&&!item.announced);
+    const event=availableEvents[0];
+    if(!event)return;
+    event.announced=true;
+    activeMolaEventId=event.id;
+    setMolaEventStatus(event,"REQUEST AVAILABLE");
+    const isFinalRequest=event.id==="mola-final";
+    showEventAlert(
+      isFinalRequest
+        ?"Final MOLA B topographic check available. Acknowledge to start the scan."
+        :"MOLA A track request available. Acknowledge to review the instrument briefing.",
+      "warning",
+      null,
+      null,
+      ()=>isFinalRequest?requestMolaTrackEvent(event.id):openMolaBriefing(event.id)
+    );
+  }
+  function requestMolaTrackEvent(eventId){
+    const event=MOLA_ROUTE_EVENTS.find(item=>item.id===eventId);
+    if(!event||!event.triggered||event.completed||event.requested)return;
+    if(surveyorLoading||surveyorPassActive){
+      showEventAlert("A MOLA track is already in progress. This request remains available.");
+      return;
+    }
+    if(!document.getElementById("mola-readout-popup").hidden){
+      showEventAlert("Acknowledge the previous MOLA readings before starting another pass.","warning",null,null,()=>requestMolaTrackEvent(event.id));
+      return;
+    }
+    event.requested=true;
+    pendingMolaEventId=event.id;
+    activeMolaEventId=null;
+    if(event.id==="mola-start"){
+      const briefingButton=document.getElementById("mola-briefing-start");
+      briefingButton.disabled=true;
+      briefingButton.textContent="MOLA SCAN IN PROGRESS";
+    }
+    setMolaEventStatus(event,"TRACK IN PROGRESS");
+    callSurveyor();
+  }
+  function openMolaBriefing(eventId){
+    const event=MOLA_ROUTE_EVENTS.find(item=>item.id===eventId);
+    if(!event||event.id!=="mola-start"||event.requested||event.completed)return;
+    activeMolaEventId=event.id;
+    document.getElementById("mola-briefing-popup").hidden=false;
+  }
+  function triggerMolaRequestEvents(){
+    if(!started||missionFailed||missionCompleted||!player)return;
+    const elapsedSeconds=(performance.now()-missionStartTime)/1000;
+    const startEvent=MOLA_ROUTE_EVENTS.find(item=>item.id==="mola-start");
+    if(!startEvent.triggered&&elapsedSeconds>=MOLA_START_REQUEST_DELAY_SECONDS){
+      startEvent.triggered=true;
+      setMolaEventStatus(startEvent,"SCHEDULED · AVAILABLE");
+      announceNextMolaEvent();
+    }
+    const finalEvent=MOLA_ROUTE_EVENTS.find(item=>item.id==="mola-final");
+    if(startEvent.completed&&!finalEvent.triggered
+      &&Math.hypot(finalEvent.x-player.position.x,finalEvent.z-player.position.z)<=MOLA_FINAL_TRIGGER_RADIUS){
+      finalEvent.triggered=true;
+      setMolaEventStatus(finalEvent,"SCHEDULED · AVAILABLE");
+      announceNextMolaEvent();
+    }
+  }
+  function failMission(message){
+    if(missionFailed||missionCompleted)return;
+    missionFailed=true;
+    keys.clear();
+    document.getElementById("mission-failed-message").textContent=message;
+    document.getElementById("mission-failed").hidden=false;
+  }
+  function completeMission(){
+    if(missionCompleted||!player)return;
+    missionCompleted=true;
+    started=false;
+    keys.clear();
+    waypoint=null;
+    if(viewMode==="map")setView("first-person");
+    setDisplay("reality");
+    if(temperatureSurface)temperatureSurface.visible=false;
+    if(radiationSurface)radiationSurface.visible=false;
+    if(terrainAwarenessSurface)terrainAwarenessSurface.visible=false;
+    if(markerGroup)markerGroup.visible=false;
+    if(looseSandZone)looseSandZone.visible=false;
+    stormHaze.style.opacity="0";
+    if(surveyor)surveyor.visible=false;
+    if(molaBeam)molaBeam.visible=false;
+    if(molaFootprint)molaFootprint.visible=false;
+    surveyorPassActive=false;
+    autoTrackSurveyor=false;
+    player.visible=true;
+    const behindX=-Math.sin(yaw),behindZ=Math.cos(yaw);
+    missionEndingCameraPosition=new THREE.Vector3(
+      player.position.x+behindX*8,
+      player.position.y+4,
+      player.position.z+behindZ*8
+    );
+    missionEndingCameraTarget=new THREE.Vector3(
+      player.position.x,
+      player.position.y+1.15,
+      player.position.z
+    );
+    eventAlertQueue=[];
+    activeEventAlert=null;
+    alertActionHandler=null;
+    alertAcknowledgeHandler=null;
+    document.getElementById("mission-complete").hidden=false;
+    simulator.classList.add("mission-complete");
+    window.setTimeout(()=>{document.getElementById("mission-credits").hidden=false},6500);
+  }
+  function checkMissionDestination(){
+    const destination=ROUTE_STOPS[ROUTE_STOPS.length-1];
+    if(Math.hypot(destination.x-player.position.x,destination.z-player.position.z)>MISSION_DESTINATION_RADIUS)return;
+    const incompleteTasks=routeTasks.filter(task=>!task.completed);
+    const incompleteMolaEvents=MOLA_ROUTE_EVENTS.filter(event=>!event.completed);
+    if(incompleteTasks.length||incompleteMolaEvents.length){
+      if(!destinationReminderShown){
+        destinationReminderShown=true;
+        const remaining=[];
+        if(incompleteTasks.length)remaining.push(`${incompleteTasks.length} remaining route mission${incompleteTasks.length===1?"":"s"}`);
+        if(incompleteMolaEvents.length)remaining.push(`${incompleteMolaEvents.length} MOLA track${incompleteMolaEvents.length===1?"":"s"}`);
+        showEventAlert(`Destination reached. Complete ${remaining.join(" and ")} before ending the expedition.`,"warning");
+      }
+      return;
+    }
+    if(!document.getElementById("event-alert").hidden
+      ||!document.getElementById("mola-readout-popup").hidden
+      ||!document.getElementById("mola-briefing-popup").hidden
+      ||!document.getElementById("sample-briefing-popup").hidden)return;
+    completeMission();
+  }
+  function distanceToTask(taskId,x=player.position.x,z=player.position.z){
+    const task=campaignTasks.find(item=>item.id===taskId);
+    return Math.hypot(x-task.x,z-task.z);
+  }
+  function radiationHazardAdjustmentAt(x,z){
+    const distance=Math.hypot(x-looseSandTask.x,z-looseSandTask.z);
+    return distance<85?-.6*(1-distance/85):0;
+  }
+  function showTaskBriefing(task){
+    const briefings={
+      maaz:{
+        title:"MÁAZ FORMATION · IGNEOUS SAMPLE",
+        image:"./nasa-maaz-rochette-pia24839.jpg",
+        alt:"Perseverance image of the Rochette rock and its Bellegarde abrasion patch",
+        credit:"NASA/JPL-Caltech · PIA 24839",
+        href:"https://science.nasa.gov/photojournal/abrasion-patch-on-rochette/",
+        copy:"Rochette is a documented Jezero crater-floor sample target in the Máaz igneous unit. Studying this rock can reveal how the crater floor formed and whether its minerals were later altered by water. A core preserves its texture and chemistry for detailed analysis."
+      },
+      "delta-sediment":{
+        title:"DELTA FRONT · SEDIMENTARY SAMPLE",
+        image:"./nasa-delta-wildcat-ridge-pia24928.jpg",
+        alt:"Perseverance Mastcam-Z mosaic of the Wildcat Ridge sedimentary outcrop in Jezero's delta",
+        credit:"NASA/JPL-Caltech/ASU/MSSS · PIA 24928",
+        href:"https://science.nasa.gov/photojournal/sample-collection-and-rock-analysis-at-wildcat-ridge/",
+        copy:"Wildcat Ridge is a Jezero delta outcrop where Perseverance collected fine-grained sedimentary cores. Delta sediments can preserve a record of the ancient river-and-lake environment and potential past habitability. Sampling lets scientists examine grains and minerals in detail."
+      },
+      "temperature-1":{
+        title:"MEDA · TEMPERATURE & WEATHER",
+        image:"./nasa-meda-instrument.jpg",
+        alt:"Mars Environmental Dynamics Analyzer sensor booms on the Perseverance rover",
+        credit:"NASA/JPL-Caltech · Mars Environmental Dynamics Analyzer",
+        href:"https://science.nasa.gov/mission/mars-2020-perseverance/science-instruments/#sensors",
+        copy:"MEDA records Martian air temperature, wind, humidity and dust. Temperature measurements help scientists understand daily heating and local weather, while giving explorers context for suit thermal limits and surface conditions. This site uses a simplified MEDA-style sensor stand."
+      },
+      "temperature-2":{
+        title:"MEDA · TEMPERATURE & WEATHER",
+        image:"./nasa-meda-instrument.jpg",
+        alt:"Mars Environmental Dynamics Analyzer sensor booms on the Perseverance rover",
+        credit:"NASA/JPL-Caltech · Mars Environmental Dynamics Analyzer",
+        href:"https://science.nasa.gov/mission/mars-2020-perseverance/science-instruments/#sensors",
+        copy:"A second temperature survey compares conditions near the delta with the earlier crater-floor measurement. MEDA measures temperature alongside wind, humidity and dust, helping scientists characterize the changing Martian environment and plan surface activity."
+      },
+      "ground-condition":{
+        title:"GROUND CONDITION · COMPACTION SURVEY",
+        image:"./nasa-apollo16-penetrometer.jpg",
+        alt:"Apollo 16 training model of the self-recording penetrometer used to measure lunar soil strength",
+        credit:"NASA/JSC · Apollo 16 self-recording penetrometer training image",
+        href:"https://images.nasa.gov/details/s72-30694",
+        copy:"Ground firmness affects astronaut footing, equipment placement and the stability of a sample site. A penetrometer measures resistance as a probe is pushed into soil, helping explorers compare compacted ground with loose sediment, choose safer routes and understand how local materials behave. The model animates a simplified insertion test."
+      }
+    };
+    const briefing=briefings[task.id];
+    if(!briefing||!document.getElementById("sample-briefing-popup").hidden)return;
+    activeTaskBriefingId=task.id;
+    document.getElementById("sample-briefing-title").textContent=briefing.title;
+    const image=document.getElementById("sample-briefing-image");
+    const figure=document.querySelector("#sample-briefing-popup .mola-briefing-figure");
+    figure.hidden=!briefing.image;
+    const caption=document.getElementById("sample-briefing-caption");
+    if(briefing.image){
+      image.src=briefing.image;
+      image.alt=briefing.alt;
+      caption.replaceChildren(document.createTextNode(`${briefing.credit} · `));
+      if(briefing.href){
+        const sourceLink=document.createElement("a");
+        sourceLink.href=briefing.href;
+        sourceLink.target="_blank";
+        sourceLink.rel="noopener noreferrer";
+        sourceLink.textContent="NASA";
+        caption.appendChild(sourceLink);
+      }
+    }else{
+      image.removeAttribute("src");
+      image.alt="";
+      caption.replaceChildren();
+    }
+    document.getElementById("sample-briefing-copy").textContent=briefing.copy;
+    document.getElementById("sample-briefing-popup").hidden=false;
+  }
+  function acknowledgeTaskBriefing(){
+    const task=campaignTasks.find(item=>item.id===activeTaskBriefingId);
+    if(task)task.briefed=true;
+    activeTaskBriefingId=null;
+    document.getElementById("sample-briefing-popup").hidden=true;
+    updateProximityPrompt();
+  }
+  function updateProximityPrompt(){
+    const prompt=document.getElementById("interaction-prompt");
+    if(samplePickupAnimation){
+      prompt.hidden=true;
+      return;
+    }
+    const candidates=sites
+      .map(site=>({site,distance:Math.hypot(site.x-player.position.x,site.z-player.position.z)}))
+      .filter(candidate=>candidate.distance<=11)
+      .sort((a,b)=>a.distance-b.distance);
+    nearbySite=candidates[0]?.site||null;
+    prompt.hidden=!nearbySite;
+    if(!nearbySite)return;
+    const task=campaignTasks.find(item=>item.id===nearbySite.taskId);
+    if(!task.completed&&!task.briefed)showTaskBriefing(task);
+    const label=document.getElementById("interaction-label");
+    const button=document.getElementById("interact-button");
+    label.textContent=task.completed?`${task.label} · DONE`:`${task.label} · PRESS Y`;
+    button.disabled=task.completed;
+    button.textContent=task.completed?"RECORDED":"INTERACT · Y";
+  }
+  function interactWithNearbyTask(){
+    if(missionFailed||missionCompleted||!nearbySite)return;
+    const task=campaignTasks.find(item=>item.id===nearbySite.taskId);
+    if(!task||task.completed||!task.briefed)return;
+    if(task.type==="sample"){
+      if(!sampleModels.has(task.id)){
+        showEventAlert("The sample model is still loading. Try the interaction again shortly.","warning");
+        return;
+      }
+      startSamplePickup(task);
+    }else if(task.type==="temperature"){
+      const temperature=estimateSurfaceTemperature().temperatureC;
+      setTaskStatus(task.id,`COMPLETE · ${temperature} °C`,true);
+      showEventAlert(`${task.label.split(" · ")[0]} recorded ${temperature} °C.`,"success");
+    }else if(task.type==="compaction"){
+      startCompactionProbe(task);
+    }
+    updateProximityPrompt();
+  }
+  function startSamplePickup(task){
+    if(viewMode==="map")setView("first-person");
+    const model=sampleModels.get(task.id);
+    if(!model||samplePickupAnimation)return;
+    const position=new THREE.Vector3();
+    model.getWorldPosition(position);
+    samplePickupAnimation={
+      task,
+      model,
+      start:performance.now(),
+      startPosition:position,
+      startScale:model.scale.x,
+      startRotation:model.rotation.y,
+      duration:1450
+    };
+    keys.clear();
+    document.getElementById("interaction-prompt").hidden=true;
+  }
+  function updateSamplePickup(){
+    if(!samplePickupAnimation)return;
+    const pickup=samplePickupAnimation;
+    const progress=THREE.MathUtils.clamp((performance.now()-pickup.start)/pickup.duration,0,1);
+    const eased=1-Math.pow(1-progress,3);
+    const pocketTarget=camera.localToWorld(new THREE.Vector3(.34,-.35,-1.05));
+    pickup.model.position.lerpVectors(pickup.startPosition,pocketTarget,eased);
+    pickup.model.scale.setScalar(THREE.MathUtils.lerp(pickup.startScale,.12,eased));
+    pickup.model.rotation.y=pickup.startRotation+progress*Math.PI*1.6;
+    if(progress<1)return;
+    scene.remove(pickup.model);
+    camera.add(pickup.model);
+    pickup.model.position.set(.34,-.35,-1.05);
+    pickup.model.rotation.set(-.2,.35,0);
+    pickup.model.scale.setScalar(.12);
+    window.setTimeout(()=>{pickup.model.visible=false},700);
+    setTaskStatus(pickup.task.id,"COMPLETE · SAMPLE SECURED",true);
+    showEventAlert(pickup.task.id==="maaz"
+      ?"Máaz formation sample collected and logged."
+      :"Delta sedimentary sample collected and logged.","success");
+    samplePickupAnimation=null;
+    updateProximityPrompt();
+  }
+  function startCompactionProbe(task){
+    if(compactionProbeAnimation||!compactionProbePlunger)return;
+    compactionProbeAnimation={
+      task,
+      start:performance.now(),
+      duration:1900,
+      value:Math.round(62+Math.sin(player.position.x*.021)*11+Math.cos(player.position.z*.017)*8)
+    };
+    keys.clear();
+    document.getElementById("interaction-prompt").hidden=true;
+  }
+  function updateCompactionProbe(){
+    if(!compactionProbeAnimation||!compactionProbePlunger)return;
+    const probe=compactionProbeAnimation;
+    const progress=THREE.MathUtils.clamp((performance.now()-probe.start)/probe.duration,0,1);
+    const plunge=progress<.48
+      ?THREE.MathUtils.smoothstep(progress,0,.48)
+      :1-THREE.MathUtils.smoothstep(progress,.48,1);
+    compactionProbePlunger.position.y=.82-.66*plunge;
+    if(progress<1)return;
+    compactionProbePlunger.position.y=.82;
+    setTaskStatus(probe.task.id,`COMPLETE · ${probe.value}%`,true);
+    showEventAlert(`Ground compaction measured: ${probe.value}%.`,"success");
+    compactionProbeAnimation=null;
+    updateProximityPrompt();
+  }
+  function updateHazards(){
+    const sandDistance=distanceToTask("loose-sand");
+    if(sandDistance<=120&&!looseSandEntered&&!radiationSensorChecked&&!looseSandWarningShown){
+      looseSandWarningShown=true;
+      showEventAlert("LOOSE SAND AHEAD · Open HUD VISOR and check the RADIATION sensor before entering the marked zone.","warning",null,null,null,"loose-sand-warning");
+    }
+    if(sandDistance<=55&&!looseSandEntered){
+      if(!radiationSensorChecked){
+        clearEventAlert("loose-sand-warning");
+        failMission("You entered the loose-sand zone without checking the radiation sensor. The environmental conditions were not assessed.");
+        return;
+      }
+      clearEventAlert("loose-sand-warning");
+      looseSandEntered=true;
+      showEventAlert("RADIATION SENSOR CHECKED · Loose sand slows movement. Continue through the marked zone.","warning",null,null,null,"loose-sand-active");
+    }
+    if(looseSandEntered&&!looseSandCleared&&sandDistance>68){
+      looseSandCleared=true;
+      clearEventAlert("loose-sand-warning");
+      clearEventAlert("loose-sand-active");
+      showEventAlert("Loose-sand zone cleared. Radiation sensor check logged.","success");
+    }
+    const stormDistance=distanceToTask("sandstorm");
+    if(stormDistance<=SANDSTORM_ALERT_RADIUS&&!sandstormTriggered){
+      sandstormTriggered=true;
+      sandstormActive=true;
+      showEventAlert("SANDSTORM ALERT · Temperature and sunlight exposure are dropping. Suspended dust reduces visibility. Check the radiation sensor before entering the storm.","warning",null,null,null,"sandstorm-active");
+      lastTemperatureFieldUpdate=0;
+      lastRadiationFieldUpdate=0;
+    }else if(sandstormActive&&stormDistance>SANDSTORM_CLEAR_RADIUS){
+      sandstormActive=false;
+      clearEventAlert("sandstorm-active");
+      showEventAlert("Sandstorm traverse complete. Visibility is recovering.","success");
+      lastTemperatureFieldUpdate=0;
+      lastRadiationFieldUpdate=0;
+    }
+    if(sandstormActive&&stormDistance<=SANDSTORM_CHECK_RADIUS&&!sandstormSensorChecked){
+      clearEventAlert("sandstorm-active");
+      failMission("You entered the dust storm without checking the radiation sensor.");
+      return;
+    }
+  }
+  function updateHazardEffects(delta){
+    const sandDistance=distanceToTask("loose-sand");
+    const sandTarget=1-THREE.MathUtils.smoothstep(sandDistance,LOOSE_SAND_SLOW_CORE_RADIUS,LOOSE_SAND_SLOW_OUTER_RADIUS);
+    looseSandIntensity=THREE.MathUtils.damp(looseSandIntensity,sandTarget,3.2,delta);
+    const stormDistance=distanceToTask("sandstorm");
+    const stormTarget=1-THREE.MathUtils.smoothstep(stormDistance,SANDSTORM_CORE_RADIUS,SANDSTORM_EFFECT_RADIUS);
+    sandstormIntensity=THREE.MathUtils.damp(sandstormIntensity,stormTarget,2.2,delta);
+    scene.fog.density=.003+.022*sandstormIntensity+.0012*looseSandIntensity;
+    stormHaze.style.opacity=(.52*sandstormIntensity).toFixed(3);
+  }
+  function estimateSurfaceTemperature(){
+    const elapsedSeconds=Math.max(0,(performance.now()-missionStartTime)/1000);
+    const inSourceWindow=elapsedSeconds<=SOLAR_ZENITH_DURATION_SECONDS;
+    const sampleSeconds=Math.min(elapsedSeconds,SOLAR_ZENITH_DURATION_SECONDS);
+    const sampleIndex=Math.min(Math.floor(sampleSeconds/SOLAR_ZENITH_STEP_SECONDS),SOLAR_ZENITH_PROFILE.length-1);
+    const nextIndex=Math.min(sampleIndex+1,SOLAR_ZENITH_PROFILE.length-1);
+    const interpolation=sampleIndex===nextIndex?0:(sampleSeconds-sampleIndex*SOLAR_ZENITH_STEP_SECONDS)/SOLAR_ZENITH_STEP_SECONDS;
+    const solarZenith=SOLAR_ZENITH_PROFILE[sampleIndex]
+      +(SOLAR_ZENITH_PROFILE[nextIndex]-SOLAR_ZENITH_PROFILE[sampleIndex])*interpolation;
+    const solarFlux=Math.max(0,Math.cos(solarZenith*Math.PI/180));
+    const referenceFlux=Math.cos(REFERENCE_SOLAR_ZENITH*Math.PI/180);
+    const temperatureK=REFERENCE_SURFACE_TEMP_K*Math.pow(solarFlux/referenceFlux,.25);
+    const localTimeSeconds=15*3600+24*60+36+Math.floor(sampleSeconds);
+    const hours=Math.floor(localTimeSeconds/3600)%24;
+    const minutes=Math.floor(localTimeSeconds%3600/60);
+    return {
+      temperatureC:Math.round(temperatureK-273.15-18*sandstormIntensity-8*looseSandIntensity),
+      solarZenith,
+      localTime:`${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}`,
+      inSourceWindow
+    };
+  }
+  function makeSurfaceDetailTexture(){
+    const size=256,data=new Uint8Array(size*size*4);
+    for(let y=0;y<size;y++){
+      for(let x=0;x<size;x++){
+        const index=(y*size+x)*4;
+        const noise=Math.sin(x*12.9898+y*78.233)*43758.5453;
+        const value=112+Math.floor((noise-Math.floor(noise))*48);
+        data[index]=value;data[index+1]=value;data[index+2]=value;data[index+3]=255;
+      }
+    }
+    const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);
+    texture.wrapS=THREE.RepeatWrapping;texture.wrapT=THREE.RepeatWrapping;
+    texture.repeat.set(90*FIELD_EXPANSION_X,54*FIELD_EXPANSION_Z);texture.needsUpdate=true;
+    return texture;
+  }
+  function makeMaterials(){
+    const surfaceDetail=makeSurfaceDetailTexture();
+    return {
+      terrain:new THREE.MeshStandardMaterial({map:terrainTexture,bumpMap:surfaceDetail,bumpScale:.18,color:0xffffff,emissive:0x5c5145,emissiveIntensity:.65,roughness:1,metalness:0}),
+      rock:new THREE.MeshStandardMaterial({color:0x715744,roughness:1}),
+      rockLight:new THREE.MeshStandardMaterial({color:0x94765b,roughness:1}),
+      rockDark:new THREE.MeshStandardMaterial({color:0x5c493b,roughness:1}),
+      suit:new THREE.MeshStandardMaterial({color:0xd9d8ca,roughness:.73}),
+      suitShadow:new THREE.MeshStandardMaterial({color:0x66737b,roughness:.8}),
+      visor:new THREE.MeshStandardMaterial({color:0x536e78,metalness:.45,roughness:.3}),
+      marker:new THREE.MeshStandardMaterial({color:0xc4a978,emissive:0x35240c,roughness:.55}),
+      beacon:new THREE.MeshStandardMaterial({color:0xe9c88f,emissive:0x4d2e0d,roughness:.4})
+    };
+  }
+  function makeRockTexture(style){
+    const size=256,data=new Uint8Array(size*size*4);
+    const base=style==="basalt"?[108,75,60]:[143,113,83];
+    for(let y=0;y<size;y++){
+      for(let x=0;x<size;x++){
+        const index=(y*size+x)*4;
+        const broad=Math.sin(x*.031+Math.sin(y*.019)*1.8)+Math.cos(y*.026+x*.007);
+        const grain=Math.sin(x*.39+y*.61)*Math.cos(y*.47-x*.21);
+        const hash=Math.sin(x*127.1+y*311.7)*43758.5453;
+        const fleck=hash-Math.floor(hash)>.992?24:0;
+        const bands=style==="basalt"?Math.sin((x+y)*.065+broad)*7:Math.sin(y*.12+broad)*15;
+        const variation=broad*12+grain*7+bands+fleck;
+        data[index]=THREE.MathUtils.clamp(base[0]+variation,0,255);
+        data[index+1]=THREE.MathUtils.clamp(base[1]+variation*.82,0,255);
+        data[index+2]=THREE.MathUtils.clamp(base[2]+variation*.64,0,255);
+        data[index+3]=255;
+      }
+    }
+    const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);
+    texture.colorSpace=THREE.SRGBColorSpace;
+    texture.wrapS=THREE.RepeatWrapping;
+    texture.wrapT=THREE.RepeatWrapping;
+    texture.magFilter=THREE.LinearFilter;
+    texture.minFilter=THREE.LinearMipmapLinearFilter;
+    texture.generateMipmaps=true;
+    texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+    texture.needsUpdate=true;
+    return texture;
+  }
+  function addInstrumentStrut(group,start,end,radius,material){
+    const direction=new THREE.Vector3().subVectors(end,start);
+    const strut=new THREE.Mesh(
+      new THREE.CylinderGeometry(radius*.78,radius,direction.length(),8),
+      material
+    );
+    strut.position.copy(start).add(end).multiplyScalar(.5);
+    strut.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction.normalize());
+    strut.castShadow=true;
+    group.add(strut);
+  }
+  function addMedaSensorAssembly(group,materials){
+    const shield=new THREE.MeshStandardMaterial({color:0xd5d9d3,roughness:.62,metalness:.12});
+    const sensor=new THREE.MeshStandardMaterial({color:0x273337,roughness:.48,metalness:.32});
+    const joint=new THREE.Vector3(0,.62,0);
+    for(const [x,z] of [[-.27,.17],[.27,.17],[0,-.27]]){
+      addInstrumentStrut(group,joint,new THREE.Vector3(x,.045,z),.025,materials.suitShadow);
+      const foot=new THREE.Mesh(new THREE.BoxGeometry(.14,.035,.11),sensor);
+      foot.position.set(x,.025,z);
+      foot.castShadow=true;
+      group.add(foot);
+    }
+    addInstrumentStrut(group,new THREE.Vector3(0,.58,0),new THREE.Vector3(0,1.34,0),.035,sensor);
+    for(let level=0;level<4;level++){
+      const plate=new THREE.Mesh(new THREE.CylinderGeometry(.17,.17,.025,16),shield);
+      plate.position.y=.94+level*.085;
+      plate.castShadow=true;
+      plate.receiveShadow=true;
+      group.add(plate);
+    }
+    const cap=new THREE.Mesh(new THREE.BoxGeometry(.16,.12,.15),sensor);
+    cap.position.set(0,1.35,0);
+    cap.castShadow=true;
+    group.add(cap);
+    for(const side of [-1,1]){
+      addInstrumentStrut(group,new THREE.Vector3(0,1.25,0),new THREE.Vector3(side*.34,1.25,0),.018,materials.suitShadow);
+      const probe=new THREE.Mesh(new THREE.BoxGeometry(.13,.11,.13),materials.marker);
+      probe.position.set(side*.36,1.25,0);
+      group.add(probe);
+    }
+  }
+  function addCompactionProbe(group,materials){
+    const dark=new THREE.MeshStandardMaterial({color:0x273337,roughness:.5,metalness:.35});
+    const steel=new THREE.MeshStandardMaterial({color:0x9ca5a0,roughness:.34,metalness:.78});
+    const grip=new THREE.MeshStandardMaterial({color:0xb74f3c,roughness:.76,metalness:.04});
+    const plate=new THREE.Mesh(new THREE.CylinderGeometry(.23,.23,.06,16),materials.suitShadow);
+    plate.position.y=.04;
+    plate.receiveShadow=true;
+    group.add(plate);
+    addInstrumentStrut(group,new THREE.Vector3(0,.08,0),new THREE.Vector3(0,1.08,0),.035,dark);
+    const crossbar=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,.56,10),steel);
+    crossbar.rotation.z=Math.PI/2;
+    crossbar.position.y=.91;
+    crossbar.castShadow=true;
+    group.add(crossbar);
+    for(const side of [-1,1]){
+      const handle=new THREE.Mesh(new THREE.CylinderGeometry(.052,.052,.13,10),grip);
+      handle.rotation.z=Math.PI/2;
+      handle.position.set(side*.29,.91,0);
+      group.add(handle);
+    }
+    const plunger=new THREE.Group();
+    const tube=new THREE.Mesh(new THREE.CylinderGeometry(.039,.039,.66,12),steel);
+    tube.position.y=-.31;
+    tube.castShadow=true;
+    plunger.add(tube);
+    const tip=new THREE.Mesh(new THREE.ConeGeometry(.055,.16,12),dark);
+    tip.rotation.x=Math.PI;
+    tip.position.y=-.72;
+    tip.castShadow=true;
+    plunger.add(tip);
+    for(const bandY of [-.12,-.29,-.46]){
+      const band=new THREE.Mesh(new THREE.CylinderGeometry(.052,.052,.035,12),grip);
+      band.position.y=bandY;
+      plunger.add(band);
+    }
+    const sensorHead=new THREE.Mesh(new THREE.CylinderGeometry(.095,.075,.16,12),dark);
+    sensorHead.position.y=.08;
+    sensorHead.castShadow=true;
+    plunger.add(sensorHead);
+    const readout=new THREE.Mesh(new THREE.BoxGeometry(.14,.08,.025),materials.marker);
+    readout.position.set(0,.1,.087);
+    plunger.add(readout);
+    plunger.position.y=.82;
+    group.add(plunger);
+    compactionProbePlunger=plunger;
+  }
+  function loadSampleModels(){
+    if(!THREE.OBJLoader){
+      showError("Could not load the local OBJ model loader. Keep OBJLoader.js beside the game.");
+      return;
+    }
+    const fileLoader=new THREE.FileLoader();
+    const models=[
+      {taskId:"maaz",file:"ALH84001-55_SFM_Full-Resolution-Model_Coordinate-Unregistered.obj",style:"basalt",size:1.28},
+      {taskId:"delta-sediment",file:"base.obj",style:"sedimentary",size:1.15}
+    ];
+    for(const definition of models){
+      fileLoader.load(`./${definition.file}`,contents=>{
+        try{
+          const model=new THREE.OBJLoader().parse(contents);
+          const texture=makeRockTexture(definition.style);
+          const bumpTexture=texture.clone();
+          bumpTexture.colorSpace=THREE.NoColorSpace;
+          bumpTexture.needsUpdate=true;
+          const material=new THREE.MeshStandardMaterial({
+            map:texture,bumpMap:bumpTexture,bumpScale:.018,roughness:.94,metalness:.01
+          });
+          model.traverse(child=>{
+            if(!child.isMesh)return;
+            if(!child.geometry.attributes.normal)child.geometry.computeVertexNormals();
+            child.material=material;
+            child.castShadow=true;
+            child.receiveShadow=true;
+          });
+          const bounds=new THREE.Box3().setFromObject(model);
+          const size=bounds.getSize(new THREE.Vector3());
+          const largestDimension=Math.max(size.x,size.y,size.z);
+          if(!Number.isFinite(largestDimension)||largestDimension<=0){
+            throw new Error("The OBJ contains no usable mesh geometry.");
+          }
+          const scale=definition.size/largestDimension;
+          const center=bounds.getCenter(new THREE.Vector3());
+          model.scale.setScalar(scale);
+          model.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);
+          const specimen=new THREE.Group();
+          specimen.userData.taskId=definition.taskId;
+          specimen.add(model);
+          const task=campaignTasks.find(item=>item.id===definition.taskId);
+          specimen.position.set(task.x,terrainHeight(task.x,task.z),task.z);
+          specimen.rotation.y=definition.taskId==="maaz"?.35:-.22;
+          specimen.traverse(child=>{
+            if(child.isMesh)child.castShadow=true;
+          });
+          scene.add(specimen);
+          sampleModels.set(definition.taskId,specimen);
+          const marker=markerGroup.children.find(item=>item.userData.taskId===definition.taskId);
+          if(marker)marker.visible=false;
+        }catch(cause){
+          showError(`Could not parse ${definition.file}. ${cause instanceof Error?cause.message:"The OBJ model is invalid."}`);
+        }
+      },undefined,()=>showError(`Could not load ${definition.file}. Keep it beside the game.`));
+    }
+  }
+  function proceduralTerrainHeight(x,z){
+    const localX=x/FIELD_SCALE,localZ=z/FIELD_SCALE;
+    const basin=-2.5*Math.exp(-((localX-30)*(localX-30)+(localZ+16)*(localZ+16))/5000);
+    const rolling=3*Math.sin(localX*.022)*Math.cos(localZ*.026)+1.2*Math.sin(localZ*.067+localX*.041);
+    const detail=.42*Math.sin(localX*.21-localZ*.18)*Math.cos(localX*.14+localZ*.17);
+    const impacts=[[-70,-50,13,1.4],[72,40,9,1],[-92,55,18,1.8]];
+    let craterRelief=0;
+    for(const [cx,cz,radius,depth] of impacts){
+      const distance=Math.hypot(localX-cx,localZ-cz)/radius;
+      craterRelief-=depth*Math.exp(-distance*distance*4);
+      craterRelief+=depth*.32*Math.exp(-Math.pow((distance-1)/.18,2));
+    }
+    return FIELD_SCALE*(3+basin+rolling+detail+craterRelief);
+  }
+  const M20_REFERENCE_TERRAIN_HEIGHT=proceduralTerrainHeight(0,0);
+  function terrainHeight(x,z){
+    const proceduralHeight=proceduralTerrainHeight(x,z);
+    if(x<M20_WAYPOINT_BOUNDS.minX-M20_WAYPOINT_RADIUS
+      ||x>M20_WAYPOINT_BOUNDS.maxX+M20_WAYPOINT_RADIUS
+      ||z<M20_WAYPOINT_BOUNDS.minZ-M20_WAYPOINT_RADIUS
+      ||z>M20_WAYPOINT_BOUNDS.maxZ+M20_WAYPOINT_RADIUS)return proceduralHeight;
+    const cellX=Math.floor(x/M20_GRID_CELL_SIZE);
+    const cellZ=Math.floor(z/M20_GRID_CELL_SIZE);
+    const searchRadius=Math.ceil(M20_WAYPOINT_RADIUS/M20_GRID_CELL_SIZE);
+    const radiusSquared=M20_WAYPOINT_RADIUS*M20_WAYPOINT_RADIUS;
+    let nearestDistanceSquared=Infinity,weightedElevation=0,totalWeight=0;
+    for(let offsetX=-searchRadius;offsetX<=searchRadius;offsetX++){
+      for(let offsetZ=-searchRadius;offsetZ<=searchRadius;offsetZ++){
+        const samples=m20WaypointGrid.get(`${cellX+offsetX},${cellZ+offsetZ}`);
+        if(!samples)continue;
+        for(const [sampleX,sampleZ,elevation] of samples){
+          const dx=x-sampleX,dz=z-sampleZ;
+          const distanceSquared=dx*dx+dz*dz;
+          if(distanceSquared>radiusSquared)continue;
+          if(distanceSquared<1e-6)return M20_REFERENCE_TERRAIN_HEIGHT+elevation-M20_ORIGIN_ELEVATION;
+          nearestDistanceSquared=Math.min(nearestDistanceSquared,distanceSquared);
+          const weight=1/(distanceSquared+1);
+          weightedElevation+=(elevation-M20_ORIGIN_ELEVATION)*weight;
+          totalWeight+=weight;
+        }
+      }
+    }
+    if(!totalWeight)return proceduralHeight;
+    const normalizedDistance=Math.sqrt(nearestDistanceSquared)/M20_WAYPOINT_RADIUS;
+    const blend=1-normalizedDistance*normalizedDistance*(3-2*normalizedDistance);
+    const waypointHeight=M20_REFERENCE_TERRAIN_HEIGHT+weightedElevation/totalWeight;
+    return proceduralHeight+(waypointHeight-proceduralHeight)*blend;
+  }
+  function addRocks(materials){
+    rocksGroup=new THREE.Group();
+    rocks.forEach(([x,z,r],index)=>{
+      const geometry=new THREE.SphereGeometry(1,16,12);
+      const position=geometry.attributes.position;
+      for(let vertex=0;vertex<position.count;vertex++){
+        const px=position.getX(vertex),py=position.getY(vertex),pz=position.getZ(vertex);
+        const roughness=.88+.1*Math.sin((px*13+pz*7+index)*3.1)*Math.cos((py*11-index)*2.7);
+        position.setXYZ(vertex,px*roughness,py*roughness,pz*roughness);
+      }
+      geometry.computeVertexNormals();
+      const rock=new THREE.Mesh(geometry,[materials.rock,materials.rockLight,materials.rockDark][index%3]);
+      rock.position.set(x,terrainHeight(x,z)+r*.3,z);
+      rock.scale.set(r*(1.05+(index%3)*.08),r*.58,r*(.78+(index%2)*.12));
+      rock.rotation.set(index*.31,index*.71,index*.23);
+      rock.castShadow=true;rock.receiveShadow=true;rock.userData.radius=r*.72;
+      rocksGroup.add(rock);
+    });
+    scene.add(rocksGroup);
+  }
+  function addPlayer(materials){
+    player=new THREE.Group();
+    const suit=materials.suit,suitShadow=materials.suitShadow;
+    const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.43,.75,5,8),suit);
+    torso.position.y=1.38;torso.castShadow=true;player.add(torso);
+    const pack=new THREE.Mesh(new THREE.BoxGeometry(.52,.78,.34),suitShadow);
+    pack.position.set(0,1.43,.48);pack.castShadow=true;player.add(pack);
+    const helmet=new THREE.Mesh(new THREE.SphereGeometry(.38,16,12),suit);
+    helmet.position.y=2.14;helmet.castShadow=true;player.add(helmet);
+    const visor=new THREE.Mesh(new THREE.SphereGeometry(.285,16,12),materials.visor);
+    visor.position.set(0,2.15,-.13);visor.scale.set(1,.8,.42);player.add(visor);
+    const limbs=[];
+    for(const side of [-1,1]){
+      const arm=new THREE.Mesh(new THREE.CapsuleGeometry(.14,.58,4,7),suit);
+      arm.position.set(side*.55,1.42,0);arm.rotation.z=side*-.13;arm.castShadow=true;player.add(arm);limbs.push(arm);
+      const leg=new THREE.Mesh(new THREE.CapsuleGeometry(.16,.53,4,7),suitShadow);
+      leg.position.set(side*.23,.48,0);leg.castShadow=true;player.add(leg);limbs.push(leg);
+      const boot=new THREE.Mesh(new THREE.BoxGeometry(.32,.18,.43),suitShadow);
+      boot.position.set(side*.23,.13,-.08);boot.castShadow=true;player.add(boot);
+    }
+    player.userData.limbs=limbs;
+    player.position.set(0,terrainHeight(0,0),0);
+    player.visible=false;
+    scene.add(player);
+  }
+  function addMolaTrackVisuals(){
+    const beamGeometry=new THREE.BufferGeometry();
+    beamGeometry.setAttribute("position",new THREE.Float32BufferAttribute(6,3));
+    const beamMaterial=new THREE.LineBasicMaterial({color:0x9fffe0,transparent:true,opacity:.85,depthWrite:false});
+    molaBeam=new THREE.Line(beamGeometry,beamMaterial);
+    molaBeam.frustumCulled=false;
+    molaBeam.visible=false;
+    scene.add(molaBeam);
+    const footprintMaterial=new THREE.MeshBasicMaterial({color:0x9fffe0,transparent:true,opacity:.75,depthWrite:false});
+    molaFootprint=new THREE.Mesh(new THREE.TorusGeometry(2.4,.08,6,40),footprintMaterial);
+    molaFootprint.rotation.x=Math.PI/2;
+    molaFootprint.visible=false;
+    scene.add(molaFootprint);
+  }
+  function addTemperatureSurface(){
+    temperaturePalette=[0x170c35,0x4c147a,0xb82479,0xf03c45,0xff8a28,0xffeb73].map(value=>new THREE.Color(value));
+    const geometry=new THREE.PlaneGeometry(WORLD_W,WORLD_D,TERRAIN_SEGMENTS_X,TERRAIN_SEGMENTS_Z);
+    geometry.rotateX(-Math.PI/2);
+    const position=geometry.attributes.position;
+    const colors=new THREE.BufferAttribute(new Float32Array(position.count*3),3);
+    geometry.setAttribute("color",colors);
+    for(let index=0;index<position.count;index++){
+      const x=position.getX(index),z=position.getZ(index)+WORLD_CENTER_Z;
+      position.setZ(index,z);
+      position.setY(index,terrainHeight(x,z));
+      temperatureSurfaceOffsets.push(temperatureOffsetAt(x,z,0));
+    }
+    geometry.computeVertexNormals();
+    const material=new THREE.MeshBasicMaterial({
+      color:0xffffff,vertexColors:true,transparent:true,opacity:.86,
+      depthWrite:false,toneMapped:false,side:THREE.DoubleSide
+    });
+    temperatureSurface=new THREE.Mesh(geometry,material);
+    temperatureSurface.position.y=-.07;
+    temperatureSurface.renderOrder=1;
+    temperatureSurface.frustumCulled=false;
+    temperatureSurface.visible=false;
+    scene.add(temperatureSurface);
+  }
+  function addRadiationSurface(){
+    radiationPalette=[0x243bff,0x27baff,0x35d17a,0xf5eb35,0xff8c21,0xf33232].map(value=>new THREE.Color(value));
+    const geometry=terrainMesh.geometry.clone();
+    const position=geometry.attributes.position;
+    radiationHazardSamples=new Float32Array(position.count);
+    for(let index=0;index<position.count;index++){
+      radiationHazardSamples[index]=radiationHazardAdjustmentAt(position.getX(index),position.getZ(index));
+    }
+    geometry.setAttribute("radiationHazard",new THREE.BufferAttribute(radiationHazardSamples,1));
+    const material=new THREE.ShaderMaterial({
+      uniforms:{
+        radiationSunDirection:{value:new THREE.Vector3(0,1,0)},
+        radiationStormScale:{value:1},
+        radiationColor0:{value:radiationPalette[0]},
+        radiationColor1:{value:radiationPalette[1]},
+        radiationColor2:{value:radiationPalette[2]},
+        radiationColor3:{value:radiationPalette[3]},
+        radiationColor4:{value:radiationPalette[4]},
+        radiationColor5:{value:radiationPalette[5]}
+      },
+      vertexShader:`
+        attribute float radiationHazard;
+        varying vec3 vTerrainNormal;
+        varying float vRadiationAdjustment;
+        void main(){
+          vTerrainNormal=normalize(normal);
+          vRadiationAdjustment=radiationHazard;
+          gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+        }
+      `,
+      fragmentShader:`
+        uniform vec3 radiationSunDirection;
+        uniform float radiationStormScale;
+        uniform vec3 radiationColor0;
+        uniform vec3 radiationColor1;
+        uniform vec3 radiationColor2;
+        uniform vec3 radiationColor3;
+        uniform vec3 radiationColor4;
+        uniform vec3 radiationColor5;
+        varying vec3 vTerrainNormal;
+        varying float vRadiationAdjustment;
+        void main(){
+          float exposure=clamp(max(dot(normalize(vTerrainNormal),normalize(radiationSunDirection)),0.0)*radiationStormScale+vRadiationAdjustment,0.0,1.0);
+          float scaled=exposure*5.0;
+          vec3 terrainColor;
+          if(scaled<1.0)terrainColor=mix(radiationColor0,radiationColor1,scaled);
+          else if(scaled<2.0)terrainColor=mix(radiationColor1,radiationColor2,scaled-1.0);
+          else if(scaled<3.0)terrainColor=mix(radiationColor2,radiationColor3,scaled-2.0);
+          else if(scaled<4.0)terrainColor=mix(radiationColor3,radiationColor4,scaled-3.0);
+          else terrainColor=mix(radiationColor4,radiationColor5,scaled-4.0);
+          float lowRadiation=smoothstep(0.04,0.45,-vRadiationAdjustment);
+          terrainColor=mix(terrainColor,vec3(0.02,0.78,1.0),lowRadiation*0.82);
+          gl_FragColor=vec4(terrainColor,mix(0.58,0.82,lowRadiation));
+          #include <colorspace_fragment>
+        }
+      `,
+      transparent:true,depthWrite:false,toneMapped:false,side:THREE.DoubleSide
+    });
+    radiationSurface=new THREE.Mesh(geometry,material);
+    radiationSurface.position.y=-.07;
+    radiationSurface.renderOrder=1;
+    radiationSurface.frustumCulled=false;
+    radiationSurface.visible=false;
+    scene.add(radiationSurface);
+  }
+  function temperatureOffsetAt(x,z,altitude){
+    const relativeElevation=terrainHeight(x,z)-terrainHeight(0,0);
+    const localX=x/FIELD_SCALE,localZ=z/FIELD_SCALE;
+    const regionalVariation=4*Math.sin(localX*.024+localZ*.017)+3*Math.sin(localX*.061-localZ*.043)*Math.cos(localZ*.077+localX*.027);
+    return -relativeElevation*.25+regionalVariation-altitude*.15;
+  }
+  function temperatureFieldColor(temperature,color){
+    const scaled=THREE.MathUtils.clamp((temperature+76)/30,0,1)*(temperaturePalette.length-1);
+    const lower=Math.floor(scaled);
+    const upper=Math.min(lower+1,temperaturePalette.length-1);
+    return color.copy(temperaturePalette[lower]).lerp(temperaturePalette[upper],scaled-lower);
+  }
+  function estimateAirTemperatureProfile(estimate){
+    return AIR_SAMPLE_ALTITUDES.map(altitude=>({
+      altitude,
+      temperatureC:estimate.temperatureC+temperatureOffsetAt(player.position.x,player.position.z,altitude)
+    }));
+  }
+  function updateTemperatureField(estimate,airProfile,force=false){
+    if(!temperatureSurface||activeLayer!=="temperature")return;
+    const now=performance.now();
+    if(!force&&now-lastTemperatureFieldUpdate<1000)return;
+    lastTemperatureFieldUpdate=now;
+    const color=new THREE.Color();
+    const surfaceColors=temperatureSurface.geometry.attributes.color;
+    for(let index=0;index<temperatureSurfaceOffsets.length;index++){
+      temperatureFieldColor(estimate.temperatureC+temperatureSurfaceOffsets[index],color);
+      surfaceColors.setXYZ(index,color.r,color.g,color.b);
+    }
+    surfaceColors.needsUpdate=true;
+    for(const sample of airProfile){
+      document.getElementById(`weather-air-${sample.altitude}`).textContent=`${Math.round(sample.temperatureC)} °C`;
+    }
+  }
+  function relativeAirSolarExposure(x,z,altitude,solarZenith){
+    const zenith=solarZenith*Math.PI/180;
+    const flux=Math.max(0,Math.cos(zenith));
+    const horizontal=Math.sin(zenith);
+    if(flux===0||horizontal<=0)return flux;
+    const directionLength=Math.hypot(35,20);
+    const sunDirectionX=-35/directionLength,sunDirectionZ=-20/directionLength;
+    const rayHeight=terrainHeight(x,z)+altitude;
+    const raySlope=Math.cos(zenith)/horizontal;
+    for(const distance of [12,24,48,96,160,240]){
+      if(terrainHeight(x+sunDirectionX*distance,z+sunDirectionZ*distance)>rayHeight+distance*raySlope)return 0;
+    }
+    return flux;
+  }
+  function updateRadiationField(estimate,force=false){
+    if(!skyDome||!radiationSurface||activeLayer!=="radiation")return;
+    const now=performance.now();
+    if(!force&&now-lastRadiationFieldUpdate<100)return;
+    lastRadiationFieldUpdate=now;
+    const zenith=estimate.solarZenith*Math.PI/180;
+    const horizontalScale=Math.sin(zenith)/Math.hypot(35,20);
+    const sunX=-35*horizontalScale,sunY=Math.cos(zenith),sunZ=-20*horizontalScale;
+    const uniforms=skyDome.material.uniforms;
+    uniforms.radiationSunDirection.value.set(sunX,sunY,sunZ).normalize();
+    const stormFluxScale=1-.72*sandstormIntensity;
+    const solarFlux=Math.max(0,Math.cos(zenith))*stormFluxScale;
+    uniforms.radiationSolarFlux.value=solarFlux;
+    radiationSurface.material.uniforms.radiationSunDirection.value.set(sunX,sunY,sunZ).normalize();
+    radiationSurface.material.uniforms.radiationStormScale.value=stormFluxScale;
+    for(const altitude of RADIATION_AIR_ALTITUDES){
+      const exposure=THREE.MathUtils.clamp(
+        relativeAirSolarExposure(player.position.x,player.position.z,altitude,estimate.solarZenith)*stormFluxScale
+          +radiationHazardAdjustmentAt(player.position.x,player.position.z),
+        0,1
+      );
+      document.getElementById(`radiation-air-${altitude}`).textContent=`${Math.round(exposure*100)}%`;
+    }
+  }
+  function createTerrainAwarenessSurface(){
+    const geometry=terrainMesh.geometry.clone();
+    const colors=[0x16b66c,0xe2cd27,0xff922b,0xec3a36].map(value=>new THREE.Color(value));
+    const material=new THREE.ShaderMaterial({
+      transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false,
+      polygonOffset:true,polygonOffsetFactor:-1,
+      uniforms:{
+        playerPosition:{value:new THREE.Vector3()},
+        playerYaw:{value:0},
+        sectorWidth:{value:Math.tan(TERRAIN_OVERLAY_HALF_FOV*Math.PI/180)},
+        heightColor0:{value:colors[0]},
+        heightColor1:{value:colors[1]},
+        heightColor2:{value:colors[2]},
+        heightColor3:{value:colors[3]}
+      },
+      vertexShader:`
+        uniform vec3 playerPosition;
+        uniform float playerYaw;
+        uniform float sectorWidth;
+        varying float relativeHeight;
+        varying float sectorVisibility;
+        void main(){
+          vec3 worldPosition=(modelMatrix*vec4(position,1.0)).xyz;
+          vec2 offset=worldPosition.xz-playerPosition.xz;
+          float forward=dot(offset,vec2(sin(playerYaw),-cos(playerYaw)));
+          float lateral=dot(offset,vec2(cos(playerYaw),sin(playerYaw)));
+          sectorVisibility=(forward>0.0&&abs(lateral)<=forward*sectorWidth)?1.0:0.0;
+          relativeHeight=worldPosition.y-playerPosition.y;
+          gl_Position=projectionMatrix*viewMatrix*vec4(worldPosition,1.0);
+        }
+      `,
+      fragmentShader:`
+        uniform vec3 heightColor0;
+        uniform vec3 heightColor1;
+        uniform vec3 heightColor2;
+        uniform vec3 heightColor3;
+        varying float relativeHeight;
+        varying float sectorVisibility;
+        void main(){
+          if(sectorVisibility<0.5)discard;
+          vec3 heightColor=relativeHeight>=8.0?heightColor3:
+            relativeHeight>=4.0?heightColor2:
+            relativeHeight>=1.0?heightColor1:heightColor0;
+          gl_FragColor=vec4(heightColor,0.58);
+          #include <colorspace_fragment>
+        }
+      `
+    });
+    terrainAwarenessSurface=new THREE.Mesh(geometry,material);
+    terrainAwarenessSurface.position.y=terrainMesh.position.y+.15;
+    terrainAwarenessSurface.frustumCulled=false;
+    terrainAwarenessSurface.renderOrder=2;
+    terrainAwarenessSurface.visible=false;
+    scene.add(terrainAwarenessSurface);
+  }
+  function updateTerrainAwareness(){
+    if(!player||!terrainAwarenessSurface)return;
+    const visible=displayMode==="hud"&&viewMode==="first-person"&&activeLayer==="topography";
+    if(!visible)return;
+    const uniforms=terrainAwarenessSurface.material.uniforms;
+    uniforms.playerPosition.value.set(player.position.x,player.position.y,player.position.z);
+    uniforms.playerYaw.value=yaw;
+  }
+  function updateDataLayerDisplay(){
+    const visible=displayMode==="hud"&&viewMode==="first-person";
+    const showTemperature=visible&&activeLayer==="temperature";
+    const showRadiation=visible&&activeLayer==="radiation";
+    const showTopography=visible&&activeLayer==="topography";
+    if(temperatureSurface)temperatureSurface.visible=showTemperature;
+    if(radiationSurface)radiationSurface.visible=showRadiation;
+    if(terrainAwarenessSurface)terrainAwarenessSurface.visible=showTopography;
+    if(skyDome)skyDome.material.uniforms.radiationActive.value=showRadiation?1:0;
+    document.getElementById("weather-legend").hidden=!showTemperature;
+    document.getElementById("radiation-legend").hidden=!showRadiation;
+    document.getElementById("terrain-height-legend").hidden=!showTopography;
+    if(showTopography)updateTerrainAwareness();
+  }
+  function addMartianSky(){
+    const material=new THREE.ShaderMaterial({
+      uniforms:{
+        horizonColor:{value:new THREE.Color(0xe0b17f)},
+        zenithColor:{value:new THREE.Color(0xa6573f)},
+        sunDirection:{value:new THREE.Vector3(-35,58,-20).normalize()},
+        sunTint:{value:new THREE.Color(0xffd0a1)},
+        radiationActive:{value:0},
+        radiationSolarFlux:{value:0},
+        radiationSunDirection:{value:new THREE.Vector3(-.49,.6,-.28).normalize()},
+        radiationColor0:{value:new THREE.Color(0x243bff)},
+        radiationColor1:{value:new THREE.Color(0x27baff)},
+        radiationColor2:{value:new THREE.Color(0x35d17a)},
+        radiationColor3:{value:new THREE.Color(0xf5eb35)},
+        radiationColor4:{value:new THREE.Color(0xff8c21)},
+        radiationColor5:{value:new THREE.Color(0xf33232)}
+      },
+      vertexShader:`varying vec3 vSkyDirection;
+        void main(){
+          vSkyDirection=normalize(position);
+          gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+        }`,
+      fragmentShader:`uniform vec3 horizonColor;
+        uniform vec3 zenithColor;
+        uniform vec3 sunDirection;
+        uniform vec3 sunTint;
+        uniform float radiationActive;
+        uniform float radiationSolarFlux;
+        uniform vec3 radiationSunDirection;
+        uniform vec3 radiationColor0;
+        uniform vec3 radiationColor1;
+        uniform vec3 radiationColor2;
+        uniform vec3 radiationColor3;
+        uniform vec3 radiationColor4;
+        uniform vec3 radiationColor5;
+        varying vec3 vSkyDirection;
+        vec3 radiationRamp(float value){
+          float scaled=clamp(value,0.0,1.0)*5.0;
+          float band=floor(scaled);
+          float blend=fract(scaled);
+          if(band<1.0)return mix(radiationColor0,radiationColor1,blend);
+          if(band<2.0)return mix(radiationColor1,radiationColor2,blend);
+          if(band<3.0)return mix(radiationColor2,radiationColor3,blend);
+          if(band<4.0)return mix(radiationColor3,radiationColor4,blend);
+          return mix(radiationColor4,radiationColor5,blend);
+        }
+        void main(){
+          vec3 direction=normalize(vSkyDirection);
+          float elevation=clamp(direction.y,0.0,1.0);
+          float gradient=pow(smoothstep(0.0,0.55,elevation),0.72);
+          vec3 sky=mix(horizonColor,zenithColor,gradient);
+          float sunAlignment=max(dot(direction,normalize(sunDirection)),0.0);
+          float halo=pow(sunAlignment,18.0)*0.18;
+          float disc=pow(sunAlignment,420.0)*0.65;
+          float radiationAlignment=max(dot(direction,normalize(radiationSunDirection)),0.0);
+          float directionalExposure=radiationSolarFlux*(0.35+0.65*pow(radiationAlignment,0.35));
+          vec3 radiationColor=radiationRamp(directionalExposure);
+          sky=mix(sky,radiationColor,radiationActive*0.72);
+          gl_FragColor=vec4(sky+sunTint*(halo+disc),1.0);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }`,
+      side:THREE.BackSide,
+      depthTest:false,
+      depthWrite:false,
+      toneMapped:false
+    });
+    skyDome=new THREE.Mesh(new THREE.SphereGeometry(330,48,32),material);
+    skyDome.renderOrder=-1;
+    skyDome.frustumCulled=false;
+    scene.add(skyDome);
+  }
+  function addMarkers(materials){
+    markerGroup=new THREE.Group();
+    sites.forEach((site,index)=>{
+      const marker=new THREE.Group();
+      marker.userData.taskId=site.taskId;
+      if(site.kind==="Rock samples"){
+        const outcrop=new THREE.Mesh(new THREE.IcosahedronGeometry(.78,1),materials.rockLight);
+        outcrop.position.y=.58;outcrop.scale.set(1.2,.78,.92);
+        outcrop.rotation.set(index*.13,index*.41,index*.09);
+        outcrop.castShadow=true;outcrop.receiveShadow=true;marker.add(outcrop);
+      }else if(site.taskId.startsWith("temperature-")){
+        addMedaSensorAssembly(marker,materials);
+      }else if(site.taskId==="ground-condition"){
+        addCompactionProbe(marker,materials);
+      }else{
+        const stem=new THREE.Mesh(new THREE.CylinderGeometry(.035,.05,1.05,8),materials.marker);
+        stem.position.y=.52;marker.add(stem);
+        const beacon=new THREE.Mesh(new THREE.OctahedronGeometry(.27,0),materials.marker);
+        beacon.position.y=1.18;beacon.userData.siteIndex=index;marker.add(beacon);
+      }
+      const ring=new THREE.Mesh(new THREE.TorusGeometry(.56,.035,6,24),materials.marker);
+      ring.rotation.x=Math.PI/2;ring.position.y=.06;marker.add(ring);
+      marker.position.set(site.x,terrainHeight(site.x,site.z),site.z);
+      markerGroup.add(marker);
+    });
+    scene.add(markerGroup);
+  }
+  function addLooseSandZone(){
+    const segments=64,radius=54,positions=new Float32Array((segments+1)*3),indices=[];
+    const centerX=looseSandTask.x,centerZ=looseSandTask.z;
+    positions[0]=centerX;
+    positions[1]=terrainHeight(centerX,centerZ)-.03;
+    positions[2]=centerZ;
+    for(let index=0;index<segments;index++){
+      const angle=index/segments*Math.PI*2;
+      const x=centerX+Math.cos(angle)*radius,z=centerZ+Math.sin(angle)*radius;
+      const vertex=(index+1)*3;
+      positions[vertex]=x;
+      positions[vertex+1]=terrainHeight(x,z)-.03;
+      positions[vertex+2]=z;
+      indices.push(0,index+1,(index+1)%segments+1);
+    }
+    const geometry=new THREE.BufferGeometry();
+    geometry.setAttribute("position",new THREE.BufferAttribute(positions,3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    const material=new THREE.MeshBasicMaterial({
+      color:0xd9864f,transparent:true,opacity:.23,depthWrite:false,side:THREE.DoubleSide,toneMapped:false
+    });
+    looseSandZone=new THREE.Mesh(geometry,material);
+    looseSandZone.renderOrder=1;
+    looseSandZone.frustumCulled=false;
+    scene.add(looseSandZone);
+  }
+  function makeTerrain(materials){
+    const geometry=new THREE.PlaneGeometry(WORLD_W,WORLD_D,TERRAIN_SEGMENTS_X,TERRAIN_SEGMENTS_Z);
+    geometry.rotateX(-Math.PI/2);
+    const position=geometry.attributes.position;
+    for(let i=0;i<position.count;i++){
+      const x=position.getX(i),z=position.getZ(i)+WORLD_CENTER_Z;
+      position.setZ(i,z);
+      position.setY(i,terrainHeight(x,z));
+    }
+    geometry.computeVertexNormals();
+    terrainMesh=new THREE.Mesh(geometry,materials.terrain);
+    terrainMesh.receiveShadow=true;terrainMesh.position.y=-.12;scene.add(terrainMesh);
+  }
+  function initialize(){
+    if(initialized)return true;
+    if(!window.THREE){showError("Could not load the local 3D engine. Make sure three.min.js is beside mars-survival-game.html.");return false}
+    if(!THREE.OBJLoader){showError("Could not load the local OBJ model loader. Make sure OBJLoader.js is beside mars-survival-game.html.");return false}
+    try{
+      renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));
+      renderer.setSize(window.innerWidth,window.innerHeight);
+      renderer.outputColorSpace=THREE.SRGBColorSpace;
+      renderer.toneMapping=THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure=1.3;
+      renderer.shadowMap.enabled=true;
+      renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+      sceneHost.replaceChildren(renderer.domElement);
+      scene=new THREE.Scene();
+      scene.background=new THREE.Color(0xe0b17f);
+      scene.fog=new THREE.FogExp2(0xc08d70,.003);
+      camera=new THREE.PerspectiveCamera(61,window.innerWidth/window.innerHeight,.1,360);
+      clock=new THREE.Clock();
+      scene.add(new THREE.HemisphereLight(0xd8d1c5,0x897460,2.4));
+      const sun=new THREE.DirectionalLight(0xffe6c9,3.2);
+      sun.position.set(-35,58,-20);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
+      sun.shadow.camera.left=-55;sun.shadow.camera.right=55;sun.shadow.camera.top=55;sun.shadow.camera.bottom=-55;
+      scene.add(sun);
+      addMartianSky();
+      terrainTexture=new THREE.TextureLoader().load("./nasa-hirise-jezero-crater.jpg",undefined,undefined,()=>showError("Could not load the local NASA image. Keep nasa-hirise-jezero-crater.jpg beside the game."));
+      terrainTexture.colorSpace=THREE.SRGBColorSpace;
+      terrainTexture.wrapS=THREE.ClampToEdgeWrapping;terrainTexture.wrapT=THREE.ClampToEdgeWrapping;
+      terrainTexture.repeat.set(FIELD_EXPANSION_X,FIELD_EXPANSION_Z);
+      terrainTexture.offset.set(-1.5,-.5);
+      terrainTexture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+      const materials=makeMaterials();
+      makeTerrain(materials);addLooseSandZone();addTemperatureSurface();addRadiationSurface();addRocks(materials);addPlayer(materials);addMarkers(materials);loadSampleModels();addMolaTrackVisuals();createTerrainAwarenessSurface();
+      camera.position.set(player.position.x,player.position.y+CAMERA_EYE_HEIGHT,player.position.z);
+      camera.lookAt(player.position.x,player.position.y+CAMERA_EYE_HEIGHT,player.position.z-10);
+      initialized=true;
+      resizeObserver=new ResizeObserver(onResize);resizeObserver.observe(simulator);
+      window.addEventListener("pointermove",onPointerMove);
+      window.addEventListener("pointerup",onPointerUp);
+      window.addEventListener("blur",()=>keys.clear());
+      window.addEventListener("keydown",onKeyDown);
+      window.addEventListener("keyup",onKeyUp);
+      renderer.domElement.addEventListener("pointerdown",onPointerDown);
+      renderer.setAnimationLoop(animate);
+      return true;
+    }catch(cause){
+      showError(`Could not start the 3D view. ${cause instanceof Error?cause.message:"The browser could not create a WebGL context."}`);
+      return false;
+    }
+  }
+  function onResize(){
+    if(!renderer||!camera)return;
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();
+  }
+  function onKeyDown(event){
+    if(!started||event.target.closest(".side-menu, .telemetry"))return;
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","w","a","s","d","W","A","S","D"].includes(event.key)){
+      event.preventDefault();releaseSurveyorTracking();keys.add(event.key.toLowerCase());
+    }
+    if(event.key.toLowerCase()==="y"){
+      event.preventDefault();
+      interactWithNearbyTask();
+    }
+    if(event.key==="Escape")toggleMenu(false);
+  }
+  function onKeyUp(event){keys.delete(event.key.toLowerCase())}
+  function onPointerDown(event){
+    if(viewMode!=="first-person"||event.target.closest("button"))return;
+    drag={x:event.clientX,y:event.clientY};
+    renderer.domElement.setPointerCapture(event.pointerId);
+  }
+  function onPointerMove(event){
+    if(!drag||!started||viewMode!=="first-person")return;
+    const dx=event.clientX-drag.x,dy=event.clientY-drag.y;drag={x:event.clientX,y:event.clientY};
+    releaseSurveyorTracking();
+    yaw-=dx*.004;
+    pitch=THREE.MathUtils.clamp(pitch+dy*.003,-1.45,1.45);
+    updateMapHeadingMarkers();
+    updateTerrainAwareness();
+  }
+  function onPointerUp(){drag=null}
+  function releaseSurveyorTracking(){
+    if(!autoTrackSurveyor&&(!surveyorLoading||surveyTrackingCancelled))return;
+    autoTrackSurveyor=false;
+    surveyTrackingCancelled=true;
+  }
+  function toggleMenu(force){
+    const menu=document.getElementById("science-menu");
+    const open=typeof force==="boolean"?force:menu.hidden;
+    menu.hidden=!open;
+    document.getElementById("menu-button").setAttribute("aria-expanded",String(open));
+  }
+  function updateReadings(forceDataLayer=false){
+    const gx=Math.floor((player.position.x+WORLD_W/2)/6)+1;
+    const gz=Math.floor((player.position.z-WORLD_MIN_Z)/6)+1;
+    document.getElementById("position").textContent=`SECTOR ${String(gx).padStart(2,"0")} · ${String(gz).padStart(2,"0")}`;
+    const slope=2.1+Math.abs(Math.sin(player.position.x*.08)*3.2+Math.cos(player.position.z*.1)*1.5);
+    const temperatureEstimate=estimateSurfaceTemperature();
+    const airProfile=activeLayer==="temperature"?estimateAirTemperatureProfile(temperatureEstimate):[];
+    const meanAirTemperature=airProfile.length
+      ?Math.round(airProfile.reduce((total,sample)=>total+sample.temperatureC,0)/airProfile.length)
+      :temperatureEstimate.temperatureC;
+    if(activeLayer==="temperature")updateTemperatureField(temperatureEstimate,airProfile,forceDataLayer);
+    if(activeLayer==="radiation")updateRadiationField(temperatureEstimate,forceDataLayer);
+    const elevation=Math.round(terrainHeight(player.position.x,player.position.z)-M20_REFERENCE_TERRAIN_HEIGHT);
+    let relativeSolarFlux=activeLayer==="radiation"
+      ?relativeAirSolarExposure(player.position.x,player.position.z,AIR_SAMPLE_ALTITUDES[0],temperatureEstimate.solarZenith)
+      :Math.max(0,Math.cos(temperatureEstimate.solarZenith*Math.PI/180));
+    if(activeLayer==="radiation"){
+      relativeSolarFlux=THREE.MathUtils.clamp(
+        relativeSolarFlux*(1-.72*sandstormIntensity)+radiationHazardAdjustmentAt(player.position.x,player.position.z),
+        0,1
+      );
+    }
+    const readings={
+      topography:[["REL ELEVATION",`${elevation>=0?"+":""}${elevation} m`],["SLOPE",`${slope.toFixed(1)}°`],["ROUGHNESS",slope>4?"MODERATE":"LOW"]],
+      temperature:[["AIR MEAN",`${meanAirTemperature} °C`],["SURFACE TEMP",`${temperatureEstimate.temperatureC} °C`],["SZA / LTST",`${temperatureEstimate.solarZenith.toFixed(1)}° · ${temperatureEstimate.localTime}`]],
+      radiation:[["SUN EXPOSURE",`${Math.round(relativeSolarFlux*100)}%`],["SOLAR ZENITH",`${temperatureEstimate.solarZenith.toFixed(1)}°`],["SOLAR ELEVATION",`${(90-temperatureEstimate.solarZenith).toFixed(1)}°`]]
+    };
+    readings[activeLayer].forEach((reading,index)=>{
+      document.getElementById(`reading-${"abc"[index]}-label`).textContent=reading[0];
+      document.getElementById(`reading-${"abc"[index]}`).textContent=reading[1];
+    });
+    document.getElementById("oxygen").textContent=`${Math.round(oxygen)}%`;
+    const nextTask=routeTasks.find(task=>!task.completed);
+    document.getElementById("active-objective").textContent=nextTask?nextTask.label.split(" · ")[0].toUpperCase():"ROUTE MISSIONS COMPLETE";
+    document.getElementById("objective-progress").textContent=nextTask
+      ?nextTask.label.split(" · ")[1]||nextTask.label
+      :"All route tasks completed";
+    updateMapOverlay();
+    updateTerrainAwareness();
+    updateProximityPrompt();
+  }
+  function startSurveyorPass(){
+    surveyorPassSite={x:player.position.x,z:player.position.z,heading:yaw};
+    surveyorPassStart=performance.now();
+    surveyorPassActive=true;
+    surveyorPhase="approach";
+    surveyorMeasurements=null;
+    autoTrackSurveyor=!surveyTrackingCancelled;
+    surveyor.visible=true;
+  }
+  function restoreMolaRequestAfterLoadFailure(details=""){
+    const event=MOLA_ROUTE_EVENTS.find(item=>item.id===pendingMolaEventId);
+    if(!event)return;
+    event.requested=false;
+    pendingMolaEventId=null;
+    activeMolaEventId=event.id;
+    if(event.id==="mola-start"){
+      const briefingButton=document.getElementById("mola-briefing-start");
+      briefingButton.disabled=false;
+      briefingButton.textContent="RUN NUMERIC TEST";
+    }
+    setMolaEventStatus(event,"REQUEST AVAILABLE");
+    const message=details
+      ?`MOLA model could not be loaded. ${details} The scheduled track request is still available.`
+      :"MOLA model could not be loaded. The scheduled track request is still available.";
+    showEventAlert(message,"warning","RETRY MOLA TRACK",()=>requestMolaTrackEvent(event.id));
+  }
+  function callSurveyor(){
+    if(surveyorLoading||surveyorPassActive)return;
+    surveyTrackingCancelled=false;
+    if(surveyor){
+      startSurveyorPass();
+      return;
+    }
+    surveyorLoading=true;
+    dracoLoader=new THREE.DRACOLoader().setDecoderPath("./draco/");
+    surveyorLoader=new THREE.GLTFLoader().setDRACOLoader(dracoLoader);
+    surveyorLoader.load("./Mars Global Surveyor.glb",gltf=>{
+      surveyor=gltf.scene;
+      const bounds=new THREE.Box3().setFromObject(surveyor);
+      const size=bounds.getSize(new THREE.Vector3());
+      const center=bounds.getCenter(new THREE.Vector3());
+      const largest=Math.max(size.x,size.y,size.z);
+      if(!Number.isFinite(largest)||largest===0){
+        surveyorLoading=false;
+        restoreMolaRequestAfterLoadFailure("The local model has no measurable geometry.");
+        return;
+      }
+      const scale=7.5/largest;
+      surveyor.scale.setScalar(scale);
+      surveyor.position.copy(center).multiplyScalar(-scale);
+      surveyor.traverse(object=>{
+        if(object.isMesh){object.castShadow=true;object.receiveShadow=true}
+      });
+      surveyor.visible=false;
+      scene.add(surveyor);
+      surveyorLoading=false;
+      startSurveyorPass();
+    },undefined,cause=>{
+      surveyorLoading=false;
+      const details=cause instanceof Error?cause.message:"Check the GLB and Draco files.";
+      restoreMolaRequestAfterLoadFailure(details);
+    });
+  }
+  function measureSurveyorPass(site){
+    const forwardX=Math.sin(site.heading),forwardZ=-Math.cos(site.heading);
+    const elevations=Array.from({length:9},(_,index)=>{
+      const alongTrack=(index/8-.5)*200;
+      const sampleX=THREE.MathUtils.clamp(site.x+forwardX*alongTrack,-WORLD_W/2+1,WORLD_W/2-1);
+      const sampleZ=THREE.MathUtils.clamp(site.z+forwardZ*alongTrack,WORLD_MIN_Z+1,WORLD_MAX_Z-1);
+      return terrainHeight(sampleX,sampleZ);
+    });
+    const sampleOffset=2;
+    const slopeX=(terrainHeight(site.x+sampleOffset,site.z)-terrainHeight(site.x-sampleOffset,site.z))/(sampleOffset*2);
+    const slopeZ=(terrainHeight(site.x,site.z+sampleOffset)-terrainHeight(site.x,site.z-sampleOffset))/(sampleOffset*2);
+    return {
+      elevation:Math.round(terrainHeight(site.x,site.z)-M20_REFERENCE_TERRAIN_HEIGHT),
+      relief:Math.round(Math.max(...elevations)-Math.min(...elevations)),
+      slope:Math.atan(Math.hypot(slopeX,slopeZ))*180/Math.PI
+    };
+  }
+  function updateSurveyorPass(){
+    if(!surveyor||!surveyorPassActive)return;
+    const now=performance.now();
+    const elapsed=now-surveyorPassStart;
+    const {x,z,heading}=surveyorPassSite;
+    const forwardX=Math.sin(heading),forwardZ=-Math.cos(heading);
+    const rightX=Math.cos(heading),rightZ=Math.sin(heading);
+    const approachEnd=MOLA_APPROACH_DURATION_MS;
+    const scanEnd=approachEnd+MOLA_SCAN_DURATION_MS;
+    const passEnd=scanEnd+MOLA_DEPART_DURATION_MS;
+    let trackX,trackZ,groundY,orbitY;
+    const ease=value=>value*value*(3-2*value);
+    if(elapsed<approachEnd){
+      const progress=ease(THREE.MathUtils.clamp(elapsed/approachEnd,0,1));
+      const startX=x+forwardX*MOLA_APPROACH_DISTANCE+rightX*12;
+      const startZ=z+forwardZ*MOLA_APPROACH_DISTANCE+rightZ*12;
+      trackX=THREE.MathUtils.lerp(startX,x,progress);
+      trackZ=THREE.MathUtils.lerp(startZ,z,progress);
+      groundY=terrainHeight(trackX,trackZ);
+      orbitY=groundY+65-39*progress;
+    }else if(elapsed<scanEnd){
+      trackX=x;
+      trackZ=z;
+      groundY=terrainHeight(x,z);
+      orbitY=groundY+26;
+      if(surveyorPhase!=="scan"){
+        surveyorPhase="scan";
+        surveyorMeasurements=measureSurveyorPass(surveyorPassSite);
+        document.getElementById("mola-reading-elevation").textContent=`${surveyorMeasurements.elevation>=0?"+":""}${surveyorMeasurements.elevation} m`;
+        document.getElementById("mola-reading-relief").textContent=`${surveyorMeasurements.relief} m`;
+        document.getElementById("mola-reading-slope").textContent=`${surveyorMeasurements.slope.toFixed(1)}°`;
+        const requestLabel=MOLA_ROUTE_EVENTS.find(item=>item.id===pendingMolaEventId)?.shortLabel||"A";
+        document.querySelector(".mola-readout-title").textContent=`MOLA SURFACE READINGS · REQUEST ${requestLabel}`;
+        document.getElementById("mola-readout-popup").hidden=false;
+      }
+    }else if(elapsed<passEnd){
+      const progress=ease(THREE.MathUtils.clamp((elapsed-scanEnd)/MOLA_DEPART_DURATION_MS,0,1));
+      if(surveyorPhase!=="departure"){
+        surveyorPhase="departure";
+      }
+      trackX=x-forwardX*MOLA_DEPART_DISTANCE*progress+rightX*Math.sin(progress*Math.PI)*24;
+      trackZ=z-forwardZ*MOLA_DEPART_DISTANCE*progress+rightZ*Math.sin(progress*Math.PI)*24;
+      groundY=terrainHeight(trackX,trackZ);
+      orbitY=groundY+26+35*progress;
+    }else{
+      completeSurveyorPass();
+      return;
+    }
+    trackX=THREE.MathUtils.clamp(trackX,-WORLD_W/2+1,WORLD_W/2-1);
+    trackZ=THREE.MathUtils.clamp(trackZ,WORLD_MIN_Z+1,WORLD_MAX_Z-1);
+    surveyor.position.set(trackX,orbitY,trackZ);
+    surveyor.rotation.set(.025*Math.sin(elapsed*.0003),heading,.04*Math.sin(elapsed*.0005));
+    const groundPoint=new THREE.Vector3(trackX,groundY+.12,trackZ);
+    const beamPositions=molaBeam.geometry.attributes.position;
+    beamPositions.setXYZ(0,trackX,orbitY-1,trackZ);
+    beamPositions.setXYZ(1,groundPoint.x,groundPoint.y,groundPoint.z);
+    beamPositions.needsUpdate=true;
+    const scanning=surveyorPhase==="scan";
+    molaBeam.visible=scanning&&now%100<48;
+    molaFootprint.position.copy(groundPoint);
+    molaFootprint.scale.setScalar(.85+.15*Math.sin(now*.012));
+    molaFootprint.visible=scanning;
+  }
+  function completeSurveyorPass(){
+    if(!surveyorPassActive)return;
+    surveyorPassActive=false;
+    autoTrackSurveyor=false;
+    surveyorPhase="complete";
+    surveyor.visible=false;
+    molaBeam.visible=false;
+    molaFootprint.visible=false;
+    if(pendingMolaEventId){
+      const event=MOLA_ROUTE_EVENTS.find(item=>item.id===pendingMolaEventId);
+      if(event){
+        event.completed=true;
+        setMolaEventStatus(event,"COMPLETE");
+        updateMapOverlay();
+      }
+      pendingMolaEventId=null;
+      activeMolaEventId=null;
+      showEventAlert("MOLA track request completed. The topographic profile is saved to the science log.","success");
+      window.setTimeout(announceNextMolaEvent,2200);
+    }else{
+      window.setTimeout(announceNextMolaEvent,2200);
+    }
+    updateReadings();
+  }
+  function toMapCoordinates(x,z){
+    return {
+      x:BASEMAP_ROVER_MARKER.x+x*MAP_SCALE_X,
+      y:BASEMAP_ROVER_MARKER.y+z*MAP_SCALE_Z
+    };
+  }
+  function toMiniMapCoordinates(x,z){
+    return {
+      x:MINI_MAP_ORIGIN.x+x*MINI_MAP_SCALE_X,
+      y:MINI_MAP_ORIGIN.y+z*MINI_MAP_SCALE_Z
+    };
+  }
+  function headingDegreesOnMap(scaleX,scaleZ){
+    const east=Math.sin(yaw)*scaleX;
+    const north=Math.cos(yaw)*scaleZ;
+    return Math.atan2(east,north)*180/Math.PI;
+  }
+  function updateMapHeadingMarkers(){
+    if(!player)return;
+    const position=toMapCoordinates(player.position.x,player.position.z);
+    const miniPosition=toMiniMapCoordinates(player.position.x,player.position.z);
+    document.getElementById("map-player-arrow").setAttribute(
+      "transform",
+      `translate(${position.x.toFixed(1)} ${position.y.toFixed(1)}) rotate(${headingDegreesOnMap(MAP_SCALE_X,MAP_SCALE_Z).toFixed(1)})`
+    );
+    document.getElementById("route-mini-player").setAttribute(
+      "transform",
+      `translate(${miniPosition.x.toFixed(1)} ${miniPosition.y.toFixed(1)}) rotate(${headingDegreesOnMap(MINI_MAP_SCALE_X,MINI_MAP_SCALE_Z).toFixed(1)})`
+    );
+  }
+  function smoothPath(points,project){
+    const mapped=points.map(project);
+    if(mapped.length<2)return "";
+    let path=`M ${mapped[0].x.toFixed(1)} ${mapped[0].y.toFixed(1)}`;
+    for(let index=0;index<mapped.length-1;index++){
+      const start=mapped[Math.max(0,index-1)];
+      const current=mapped[index];
+      const next=mapped[index+1];
+      const end=mapped[Math.min(mapped.length-1,index+2)];
+      const control1={x:current.x+(next.x-start.x)/6,y:current.y+(next.y-start.y)/6};
+      const control2={x:next.x-(end.x-current.x)/6,y:next.y-(end.y-current.y)/6};
+      path+=` C ${control1.x.toFixed(1)} ${control1.y.toFixed(1)}, ${control2.x.toFixed(1)} ${control2.y.toFixed(1)}, ${next.x.toFixed(1)} ${next.y.toFixed(1)}`;
+    }
+    return path;
+  }
+  function routeDistanceRemaining(x,z){
+    const segmentLengths=EXPEDITION_ROUTE.slice(1).map((point,index)=>
+      Math.hypot(point.x-EXPEDITION_ROUTE[index].x,point.z-EXPEDITION_ROUTE[index].z)
+    );
+    const remainingAfterSegment=segmentLengths.map((_,index)=>
+      segmentLengths.slice(index+1).reduce((total,length)=>total+length,0)
+    );
+    let nearestDistanceSquared=Infinity,remainingDistance=0;
+    for(let index=0;index<segmentLengths.length;index++){
+      const start=EXPEDITION_ROUTE[index],end=EXPEDITION_ROUTE[index+1];
+      const dx=end.x-start.x,dz=end.z-start.z;
+      const lengthSquared=dx*dx+dz*dz;
+      const fraction=THREE.MathUtils.clamp(((x-start.x)*dx+(z-start.z)*dz)/lengthSquared,0,1);
+      const distanceSquared=(x-(start.x+dx*fraction))**2+(z-(start.z+dz*fraction))**2;
+      if(distanceSquared<nearestDistanceSquared){
+        nearestDistanceSquared=distanceSquared;
+        remainingDistance=segmentLengths[index]*(1-fraction)+remainingAfterSegment[index];
+      }
+    }
+    return remainingDistance;
+  }
+  function addRouteEventMarker(containerId,markerId,event,project,radius){
+    const namespace="http://www.w3.org/2000/svg";
+    const position=project(event.x,event.z);
+    const marker=document.createElementNS(namespace,"g");
+    marker.id=markerId;
+    marker.setAttribute("class","map-event-pin");
+    marker.setAttribute("data-type",event.type);
+    marker.setAttribute("data-completed",String(Boolean(event.completed)));
+    marker.setAttribute("data-active",String(Boolean(event.triggered&&!event.completed)));
+    marker.setAttribute("transform",`translate(${position.x.toFixed(1)} ${position.y.toFixed(1)})`);
+    marker.setAttribute("role","img");
+    marker.setAttribute("aria-label",event.label);
+    const title=document.createElementNS(namespace,"title");
+    title.textContent=event.label;
+    marker.appendChild(title);
+    const circle=document.createElementNS(namespace,"circle");
+    circle.setAttribute("r",String(radius));
+    marker.appendChild(circle);
+    const label=document.createElementNS(namespace,"text");
+    label.setAttribute("y",".1");
+    label.textContent=event.shortLabel;
+    marker.appendChild(label);
+    document.getElementById(containerId).appendChild(marker);
+  }
+  function initializeRouteEventMarkers(){
+    const missionLabels=["1","2","3","4","5","6","7"];
+    campaignTasks.forEach((task,index)=>{
+      const event={...task,shortLabel:missionLabels[index]};
+      addRouteEventMarker("map-event-markers",`map-event-${task.id}`,event,toMapCoordinates,2.4);
+      addRouteEventMarker("route-mini-event-markers",`mini-event-${task.id}`,event,toMiniMapCoordinates,3.2);
+    });
+    for(const event of MOLA_ROUTE_EVENTS){
+      addRouteEventMarker("map-event-markers",`map-event-${event.id}`,{...event,type:"mola"},toMapCoordinates,2.4);
+      addRouteEventMarker("route-mini-event-markers",`mini-event-${event.id}`,{...event,type:"mola"},toMiniMapCoordinates,3.2);
+    }
+    routeEventMarkersInitialized=true;
+  }
+  function updateMapOverlay(){
+    if(!player)return;
+    if(!routeEventMarkersInitialized)initializeRouteEventMarkers();
+    for(const task of campaignTasks){
+      const markerState=String(Boolean(task.completed));
+      document.getElementById(`map-event-${task.id}`).dataset.completed=markerState;
+      document.getElementById(`mini-event-${task.id}`).dataset.completed=markerState;
+    }
+    for(const event of MOLA_ROUTE_EVENTS){
+      const markerState=String(Boolean(event.completed));
+      document.getElementById(`map-event-${event.id}`).dataset.completed=markerState;
+      document.getElementById(`mini-event-${event.id}`).dataset.completed=markerState;
+    }
+    const mapRoute=EXPEDITION_ROUTE.map(({x,z})=>({x,z}));
+    const mapPath=smoothPath(mapRoute,point=>toMapCoordinates(point.x,point.z));
+    document.getElementById("map-route").setAttribute("d",mapPath);
+    document.getElementById("map-route-halo").setAttribute("d",mapPath);
+    const destination=ROUTE_STOPS[ROUTE_STOPS.length-1];
+    const destinationOnMap=toMapCoordinates(destination.x,destination.z);
+    const destinationMarker=document.getElementById("map-route-destination");
+    destinationMarker.setAttribute("cx",destinationOnMap.x);
+    destinationMarker.setAttribute("cy",destinationOnMap.y);
+    const destinationLabel=document.getElementById("map-route-destination-label");
+    destinationLabel.setAttribute("x",destinationOnMap.x+11);
+    destinationLabel.setAttribute("y",destinationOnMap.y-10);
+    const miniPath=smoothPath(mapRoute,point=>toMiniMapCoordinates(point.x,point.z));
+    document.getElementById("route-mini-line").setAttribute("d",miniPath);
+    document.getElementById("route-mini-line-halo").setAttribute("d",miniPath);
+    const destinationOnMiniMap=toMiniMapCoordinates(destination.x,destination.z);
+    const miniDestination=document.getElementById("route-mini-destination");
+    miniDestination.setAttribute("cx",destinationOnMiniMap.x);
+    miniDestination.setAttribute("cy",destinationOnMiniMap.y);
+    const upcomingStop=ROUTE_STOPS.slice(1).find(stop=>Math.hypot(stop.x-player.position.x,stop.z-player.position.z)>MISSION_DESTINATION_RADIUS);
+    const remainingTasks=routeTasks.filter(task=>!task.completed).length;
+    document.getElementById("route-mini-status").textContent=upcomingStop
+      ?`TO ${upcomingStop.label} · ${Math.round(Math.hypot(upcomingStop.x-player.position.x,upcomingStop.z-player.position.z))} M`
+      :remainingTasks?`DELTA FRONT · ${remainingTasks} TASK${remainingTasks===1?" REMAINS":"S REMAIN"}`:"DELTA FRONT · ARRIVED";
+    const position=toMapCoordinates(player.position.x,player.position.z);
+    const playerMarker=document.getElementById("map-player");
+    playerMarker.setAttribute("cx",position.x);
+    playerMarker.setAttribute("cy",position.y);
+    updateMapHeadingMarkers();
+  }
+  function setView(mode){
+    viewMode=mode;
+    releaseSurveyorTracking();
+    updateDataLayerDisplay();
+    simulator.dataset.view=mode==="map"?"map":"first-person";
+    document.getElementById("hud-visor").setAttribute("aria-hidden",String(displayMode!=="hud"||mode!=="first-person"));
+    document.querySelectorAll(".view-button").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.view===mode)));
+    keys.clear();
+    drag=null;
+    document.getElementById("view-hint").textContent=mode==="map"
+      ?"CLICK MAP · SET DESTINATION  |  WASD · WALK"
+      :"W A S D / ARROWS · WALK  |  DRAG · LOOK  |  Y · INTERACT";
+    document.getElementById("map-instruction").hidden=mode!=="map";
+    updateMapOverlay();
+  }
+  function setDisplay(mode){
+    displayMode=mode;
+    if(mode!=="hud")releaseSurveyorTracking();
+    simulator.dataset.display=mode;
+    updateDataLayerDisplay();
+    const visor=document.getElementById("hud-visor");
+    const lowered=mode==="hud";
+    visor.classList.toggle("is-lowered",lowered);
+    visor.setAttribute("aria-hidden",String(!lowered||viewMode!=="first-person"));
+    document.querySelectorAll(".display-button").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.display===mode)));
+  }
+  function selectMapDestination(event){
+    if(viewMode!=="map")return;
+    const svg=document.getElementById("map-overlay");
+    const rect=svg.getBoundingClientRect();
+    const x=(event.clientX-rect.left)/rect.width*1000;
+    const y=(event.clientY-rect.top)/rect.height*600;
+    if(x<14||x>986||y<14||y>586)return;
+    waypoint={
+      x:THREE.MathUtils.clamp((x-BASEMAP_ROVER_MARKER.x)/MAP_SCALE_X,-WORLD_W/2+3,WORLD_W/2-3),
+      z:THREE.MathUtils.clamp((y-BASEMAP_ROVER_MARKER.y)/MAP_SCALE_Z,WORLD_MIN_Z+3,WORLD_MAX_Z-3)
+    };
+    document.getElementById("map-instruction").textContent="DESTINATION SET · USE WASD OR ARROW KEYS TO WALK";
+    updateMapOverlay();
+  }
+  document.getElementById("map-overlay").addEventListener("click",selectMapDestination);
+  document.querySelectorAll(".view-button").forEach(button=>{
+    button.addEventListener("click",()=>setView(button.dataset.view));
+  });
+  document.querySelectorAll(".display-button").forEach(button=>{
+    button.addEventListener("click",()=>setDisplay(button.dataset.display));
+  });
+  function animate(){
+    if(!renderer||!scene)return;
+    const delta=Math.min(clock.getDelta(),.05);
+    updateSurveyorPass();
+    if(started&&(activeLayer==="temperature"||activeLayer==="radiation")&&performance.now()-lastDataLayerUpdate>=1000){
+      lastDataLayerUpdate=performance.now();
+      updateReadings();
+    }
+    triggerMolaRequestEvents();
+    if(started&&player&&!missionFailed){
+      let dx=0,dz=0;
+      if(viewMode==="map"&&waypoint){
+        const toX=waypoint.x-player.position.x,toZ=waypoint.z-player.position.z;
+        const distance=Math.hypot(toX,toZ);
+        if(distance<.65){
+          waypoint=null;
+          document.getElementById("map-instruction").textContent="DESTINATION REACHED · SELECT ANOTHER POINT";
+        }else{
+          dx=toX/distance*STEP*delta;
+          dz=toZ/distance*STEP*delta;
+        }
+      }else{
+        let forward=(keys.has("w")||keys.has("arrowup")?1:0)-(keys.has("s")||keys.has("arrowdown")?1:0);
+        let side=(keys.has("d")||keys.has("arrowright")?1:0)-(keys.has("a")||keys.has("arrowleft")?1:0);
+        const magnitude=Math.hypot(forward,side);
+        if(magnitude){
+          forward/=magnitude;side/=magnitude;
+          dx=(side*Math.cos(yaw)+forward*Math.sin(yaw))*STEP*delta;
+          dz=(side*Math.sin(yaw)-forward*Math.cos(yaw))*STEP*delta;
+        }
+      }
+      if(samplePickupAnimation||compactionProbeAnimation){dx=0;dz=0}
+      if(dx||dz){
+        const looseSandSlowdown=1-.62*looseSandIntensity;
+        const stormSlowdown=1-.42*sandstormIntensity;
+        dx*=looseSandSlowdown*stormSlowdown;
+        dz*=looseSandSlowdown*stormSlowdown;
+        const nextX=THREE.MathUtils.clamp(player.position.x+dx,-WORLD_W/2+3,WORLD_W/2-3);
+        const nextZ=THREE.MathUtils.clamp(player.position.z+dz,WORLD_MIN_Z+3,WORLD_MAX_Z-3);
+        const blocked=rocks.some(([x,z,r])=>Math.hypot(nextX-x,nextZ-z)<r+1);
+        if(!blocked){
+          player.position.x=nextX;player.position.z=nextZ;
+          player.position.y=terrainHeight(nextX,nextZ);
+          player.rotation.y=Math.atan2(dx,-dz);
+          walkPhase+=delta*8;
+          player.userData.limbs.forEach((limb,index)=>{limb.rotation.x=Math.sin(walkPhase+(index%2)*Math.PI)*.34});
+          oxygen=Math.max(0,oxygen-delta*.06);
+          if(oxygen===0){oxygen=100;sol++}
+          updateHazards();
+          const now=performance.now();
+          if(now-lastReadingsUpdate>=100){
+            lastReadingsUpdate=now;
+            updateReadings();
+          }
+        }else if(viewMode==="map"&&waypoint){
+          waypoint=null;
+          document.getElementById("map-instruction").textContent="OBSTACLE ON ROUTE · SELECT A NEW DESTINATION";
+          updateMapOverlay();
+        }
+        updateProximityPrompt();
+      }else if(!waypoint){
+        player.userData.limbs.forEach(limb=>{limb.rotation.x=THREE.MathUtils.damp(limb.rotation.x,0,5,delta)});
+      }
+      checkMissionDestination();
+      if(!missionCompleted){
+      camera.position.set(player.position.x,player.position.y+CAMERA_EYE_HEIGHT,player.position.z);
+      if(autoTrackSurveyor&&surveyor&&surveyorPassActive){
+        const dx=surveyor.position.x-camera.position.x;
+        const dy=surveyor.position.y-camera.position.y;
+        const dz=surveyor.position.z-camera.position.z;
+        yaw=Math.atan2(dx,-dz);
+        pitch=THREE.MathUtils.clamp(Math.atan2(dy,Math.hypot(dx,dz)),-1.45,1.45);
+        updateMapHeadingMarkers();
+        updateTerrainAwareness();
+      }
+      camera.lookAt(
+        player.position.x+Math.sin(yaw)*Math.cos(pitch)*10,
+        player.position.y+CAMERA_EYE_HEIGHT+Math.sin(pitch)*10,
+        player.position.z-Math.cos(yaw)*Math.cos(pitch)*10
+      );
+      }
+    }
+    if(missionCompleted&&missionEndingCameraPosition&&missionEndingCameraTarget){
+      camera.position.lerp(missionEndingCameraPosition,1-Math.exp(-delta*2.1));
+      camera.lookAt(missionEndingCameraTarget);
+    }
+    updateSamplePickup();
+    updateCompactionProbe();
+    if(player&&!missionCompleted)updateHazardEffects(delta);
+    if(!missionCompleted)updateTerrainAwareness();
+    skyDome.position.copy(camera.position);
+    renderer.render(scene,camera);
+  }
+  function startExpedition(){
+    titleScreen.hidden=true;
+    welcome.hidden=true;
+    simulator.hidden=false;
+    error.hidden=true;
+    loading.hidden=false;
+    if(!initialize())return;
+    loading.hidden=true;
+    started=true;
+    missionStartTime=performance.now();
+    lastDataLayerUpdate=missionStartTime;
+    lastReadingsUpdate=missionStartTime;
+    sceneHost.focus({preventScroll:true});
+    updateReadings();
+  }
+  document.getElementById("show-intro").addEventListener("click",()=>{
+    titleScreen.hidden=true;
+    welcome.hidden=false;
+  });
+  document.getElementById("start").addEventListener("click",startExpedition);
+  document.getElementById("mission-return-button").addEventListener("click",()=>window.location.reload());
+  document.getElementById("back-to-welcome").addEventListener("click",()=>window.location.reload());
+  document.getElementById("interact-button").addEventListener("click",interactWithNearbyTask);
+  document.getElementById("restart-mission").addEventListener("click",()=>window.location.reload());
+  document.getElementById("event-alert-action").addEventListener("click",()=>{
+    if(!alertActionHandler)return;
+    const handler=alertActionHandler;
+    alertActionHandler=null;
+    document.getElementById("event-alert-action").disabled=true;
+    handler();
+  });
+  document.getElementById("event-alert-ack").addEventListener("click",acknowledgeEventAlert);
+  document.getElementById("mola-briefing-ack").addEventListener("click",()=>{
+    document.getElementById("mola-briefing-popup").hidden=true;
+  });
+  document.getElementById("mola-briefing-start").addEventListener("click",()=>requestMolaTrackEvent("mola-start"));
+  document.getElementById("mola-start-action").addEventListener("click",()=>openMolaBriefing("mola-start"));
+  document.getElementById("mola-final-action").addEventListener("click",()=>requestMolaTrackEvent("mola-final"));
+  document.getElementById("mola-readout-ack").addEventListener("click",()=>{
+    document.getElementById("mola-readout-popup").hidden=true;
+  });
+  document.getElementById("sample-briefing-ack").addEventListener("click",acknowledgeTaskBriefing);
+  document.getElementById("menu-button").addEventListener("click",()=>toggleMenu());
+  document.getElementById("close-menu").addEventListener("click",()=>toggleMenu(false));
+  document.querySelectorAll(".layer-select").forEach(button=>button.addEventListener("click",()=>{
+
+    activeLayer=button.dataset.layer;
+    document.querySelectorAll(".layer-select").forEach(option=>option.setAttribute("aria-pressed",String(option===button)));
+    document.getElementById("map2d").dataset.layer=activeLayer;
+    if(activeLayer==="radiation"&&!looseSandEntered&&!radiationSensorChecked){
+      const sandDistance=distanceToTask("loose-sand");
+      if(sandDistance<=120&&sandDistance>55){
+        radiationSensorChecked=true;
+        clearEventAlert("loose-sand-warning");
+        showEventAlert("Radiation sensor check logged. Loose sand will slow your movement inside the marked zone.","success");
+      }
+    }
+    if(activeLayer==="radiation"&&sandstormActive&&!sandstormSensorChecked){
+      sandstormSensorChecked=true;
+      showEventAlert("Radiation sensor check logged inside the dust storm. Continue with reduced visibility and speed.","success");
+    }
+    updateDataLayerDisplay();
+    if(activeLayer==="temperature")lastTemperatureFieldUpdate=0;
+    if(activeLayer==="radiation")lastRadiationFieldUpdate=0;
+    if(player)updateReadings(activeLayer==="temperature"||activeLayer==="radiation");
+  }));
+  document.querySelectorAll(".touch-controls button[data-key]").forEach(button=>{
+    const keyName=button.dataset.key.toLowerCase();
+    const release=()=>keys.delete(keyName);
+    button.addEventListener("pointerdown",event=>{event.preventDefault();releaseSurveyorTracking();keys.add(keyName)});
+    button.addEventListener("pointerup",release);
+    button.addEventListener("pointerleave",release);
+    button.addEventListener("pointercancel",release);
+  });
+})();
+</script>
+</body>
+</html>
